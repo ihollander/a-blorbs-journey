@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 import { DNA_IMAGE } from "../consts/images";
+import { EXPLODE_SOUND } from "../consts/sounds";
 
 export default class Enemy extends Phaser.GameObjects.Sprite {
   constructor(scene, x, y, key, type) {
@@ -31,11 +32,14 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
 
   killMe() {
     // debugger;
+    this.scene.sound.play(EXPLODE_SOUND, {
+      seek: 0.35
+    });
     const chance = Math.random();
     if (chance < 0.3) {
       this.scene.powerups
         .create(this.body.x, this.body.y, DNA_IMAGE)
-        .setScale(2);
+        .setScale(0.2);
     }
     this.destroy();
   }

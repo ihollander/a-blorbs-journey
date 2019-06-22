@@ -19,7 +19,7 @@ import {
   TOOTH_IMAGE
 } from "../consts/images";
 
-import { THUM2_SOUND } from "../consts/sounds";
+import { THUM2_SOUND, KACHING_SOUND, EXPLODE_SOUND } from "../consts/sounds";
 
 // image assets
 import player1 from "../assets/player-1.png";
@@ -33,6 +33,8 @@ import dna from "../assets/dna.png";
 import eyeball from "../assets/eyeball.png";
 
 // sounds
+import explode from "../assets/sounds/explode.mp3";
+import kaching from "../assets/sounds/kaching.mp3";
 import thum2 from "../assets/sounds/thum2.mp3";
 
 export default class MainGame extends Phaser.Scene {
@@ -41,6 +43,7 @@ export default class MainGame extends Phaser.Scene {
   }
 
   preload() {
+    // images
     this.load.image(PLAYER1_IMAGE, player1);
     this.load.image(PLAYER2_IMAGE, player2);
     this.load.image(PLAYER3_IMAGE, player3);
@@ -49,8 +52,12 @@ export default class MainGame extends Phaser.Scene {
     this.load.image(TOOTH_IMAGE, tooth);
     this.load.image(BACKGROUND_IMAGE, bg);
     this.load.image(DNA_IMAGE, dna);
-    this.load.audio(THUM2_SOUND, thum2);
     this.load.image(EYEBALL_IMAGE, eyeball);
+
+    // audio
+    this.load.audio(THUM2_SOUND, thum2);
+    this.load.audio(EXPLODE_SOUND, explode);
+    this.load.audio(KACHING_SOUND, kaching);
   }
 
   create() {
@@ -194,7 +201,12 @@ export default class MainGame extends Phaser.Scene {
   }
 
   handlePlayerPowerupOverlap(player, powerup) {
+    console.log(player);
+
     this.player.health += 10;
+    this.sound.play(KACHING_SOUND, {
+      seek: 0.15
+    });
     powerup.destroy();
   }
 

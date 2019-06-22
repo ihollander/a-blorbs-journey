@@ -139,7 +139,9 @@ export default class Player {
         y: this.sprite.y,
         angle: this.sprite.body.rotation + 70
       });
-      this.scene.sound.play(THUM2_SOUND);
+      this.scene.sound.play(THUM2_SOUND, {
+        seek: 0.15
+      });
       this.bullets.push(bullet);
     }
   }
