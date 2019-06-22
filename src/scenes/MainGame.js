@@ -38,11 +38,13 @@ export default class MainGame extends Phaser.Scene {
       this.background.height / 2
     );
 
-    this.blorb = new Blorb(
-      this,
-      this.background.width / 2,
-      this.background.height / 2
-    );
+    this.enemies = this.add.group();
+
+    // this.blorb = new Blorb(
+    //   this,
+    //   this.background.width / 2,
+    //   this.background.height / 2
+    // );
 
     // camera
     this.cameras.main.setBounds(
@@ -52,6 +54,20 @@ export default class MainGame extends Phaser.Scene {
       this.background.height
     );
     this.cameras.main.startFollow(this.player.sprite, true, 0.5, 0.5);
+
+    this.time.addEvent({
+      delay: 100,
+      callback: function() {
+        var enemy = new Blorb(
+          this,
+          Phaser.Math.Between(0, this.background.width),
+          0
+        );
+        this.enemies.add(enemy);
+      },
+      callbackScope: this,
+      loop: true
+    });
   }
 
   update() {

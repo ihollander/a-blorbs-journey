@@ -1,4 +1,14 @@
-// import { PLAYER_IMAGE } from "../consts/images";
+import { PLAYER_IMAGE } from "../consts/images";
+
+import Enemy from "./Enemy";
+
+export default class Blorb extends Enemy {
+  constructor(scene, x, y) {
+    super(scene, x, y, PLAYER_IMAGE, "Blorb");
+
+    this.body.velocity.y = Phaser.Math.Between(50, 100);
+  }
+}
 //
 // export default class Blorb {
 //   constructor(scene, x, y) {
