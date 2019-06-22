@@ -7,6 +7,8 @@ export default class Blorb extends Enemy {
     super(scene, x, y, PLAYER1_IMAGE, "Blorb");
 
     this.setScale(0.15, 0.15);
+
+    this.health = 2;
   }
 
   dance(boolean = false) {
