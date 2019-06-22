@@ -140,10 +140,10 @@ export default class MainGame extends Phaser.Scene {
       this.enemiesGroup,
       (player, enemy) => {
         if(enemy) {
+          enemy.destroy();
           this.player.health -= 5;
           this.healthbar.setText(`health: ${this.player.health}`);
-          // enemy.destroy();
-          console.log("player", player, 'health', this.player.health);
+          // console.log("player", player, 'health', this.player.health);
         }
       }
     );
