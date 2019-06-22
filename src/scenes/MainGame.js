@@ -28,7 +28,7 @@ import player3 from "../assets/player-3.png";
 import player4 from "../assets/player-4.png";
 import player5 from "../assets/player-5.png";
 import tooth from "../assets/tooth.png";
-import bg from "../assets/space.png";
+import bg from "../assets/background.png";
 import dna from "../assets/dna.png";
 import eyeball from "../assets/eyeball.png";
 
@@ -116,10 +116,9 @@ export default class MainGame extends Phaser.Scene {
     this.time.addEvent({
       delay: 1000,
       callback: function() {
-        const currentEnemies = Array.from(this.enemiesGroup.getChildren());
-
-        this.danceBlorbs(currentEnemies);
-        this.spawnEnemies(currentEnemies);
+        this.danceBlorbs(this.currentEnemies());
+        this.spawnEnemies(this.currentEnemies());
+        this.cleanupEnemies(this.currentEnemies());
       }, // End callback for adding enemies
       callbackScope: this,
       loop: true
@@ -188,7 +187,6 @@ export default class MainGame extends Phaser.Scene {
   }
 
   spawnEyeballs(spawnNum, x, y) {
-    console.log(`Spawning ${spawnNum} eyeballs!`);
     for (let i = 0; i < spawnNum; i++) {
       const eyeball = new Eyeball(this, x, y);
       this.enemiesGroup.add(eyeball);
@@ -196,8 +194,23 @@ export default class MainGame extends Phaser.Scene {
     }
   }
 
+  cleanupEnemies(currentEnemies) {
+    currentEnemies.forEach(enemy => {
+      const { x, y } = enemy.body;
+      if (
+        x > this.background.width + 100 ||
+        x < -100 ||
+        y > this.background.height + 100 ||
+        y < -100
+      ) {
+        enemy.destroy();
+      }
+    });
+  }
+
   update() {
     this.player.update();
+    this.currentEnemies().forEach(enemy => enemy.update());
   }
 
   handlePlayerPowerupOverlap(player, powerup) {
@@ -212,9 +225,14 @@ export default class MainGame extends Phaser.Scene {
 
   handlePlayerEnemyCollider(player, enemy) {
     if (enemy) {
-      enemy.destroy();
-      this.player.health -= 10;
+      enemy.damage(1);
+      this.player.damage(10);
+      // TODO: This damage should depend on the type of enemy
     }
+  }
+
+  currentEnemies() {
+    return Array.from(this.enemiesGroup.getChildren());
   }
 
   handleBulletEnemyCollider(bullet, enemy) {
