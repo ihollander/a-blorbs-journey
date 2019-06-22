@@ -100,24 +100,10 @@ export default class MainGame extends Phaser.Scene {
     this.time.addEvent({
       delay: 1000,
       callback: function() {
-        // Set all blorbs to random vector
-        Array.from(this.enemiesGroup.getChildren()).forEach(function(blorb) {
-          blorb.body.velocity.y = Phaser.Math.Between(-100, 100);
-          blorb.body.velocity.x = Phaser.Math.Between(-100, 100);
-        });
+        const currentEnemies = Array.from(this.enemiesGroup.getChildren());
 
-        // New blorb if not too many blorbs
-        if (
-          Array.from(this.enemiesGroup.getChildren()).length <= this.maxEnemies
-        ) {
-          var enemy = new Blorb(
-            this,
-            Phaser.Math.Between(10, this.background.width),
-            Phaser.Math.Between(10, this.background.height)
-          );
-          // Add blorb to group
-          this.enemiesGroup.add(enemy);
-        }
+        this.danceBlorbs(currentEnemies);
+        this.spawnEnemies(currentEnemies);
       }, // End callback for adding enemies
 
       callbackScope: this,
@@ -135,6 +121,39 @@ export default class MainGame extends Phaser.Scene {
       }
     );
   }
+
+  // Set all blorbs to random vector
+  danceBlorbs(currentEnemies) {
+    currentEnemies
+      .filter(enemy => enemy.constructor.name === "Blorb")
+      .forEach(function(blorb) {
+        blorb.dance();
+      });
+  }
+
+  // Choose which enemies to spawn and spawn them
+  spawnEnemies(currentEnemies) {
+    if (currentEnemies.length <= this.maxEnemies) {
+      this.spawnBlorb();
+    }
+  }
+
+  // Spawn a blorb
+  spawnBlorb() {
+    this.enemiesGroup.add(
+      new Blorb(
+        this,
+        Phaser.Math.Between(10, this.background.width),
+        Phaser.Math.Between(10, this.background.height)
+      )
+    );
+  }
+
+  // spawnEyeball() {
+  //   this.enemiesGroup.add (
+  //     new Eyeball
+  //   )
+  // }
 
   update() {
     this.player.update();
