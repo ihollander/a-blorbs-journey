@@ -130,4 +130,37 @@ export default class Player {
       this.bullets.push(bullet);
     }
   }
-}
+
+  kill(){
+    //this gets called when the sprite has no more health
+    this.alive = false;
+    this.sprite.visible = false;
+    // not sure what else we want to do when a game ends
+  }
+
+  heal(amount){
+    // this gets called when the sprite completes some action
+    // picks up DNA? kills an enemy? or never?
+    // and his health increases
+    if(this.health > 0){
+      this.health += amount
+      if(this.health > this.maxHealth){
+        this.health = this.maxHealth
+      }
+    return this.health
+    }
+  }
+
+  damage(amount){
+    // this gets called when the sprite doesn't avoid an enemy
+    // and his health declines
+    // if his health reaches 0, he should die
+    if(this.health > 0){
+      this.health -= amount
+      if(this.health <= 0)
+        this.kill()
+      }
+      return this.health
+    }
+
+  }

@@ -53,6 +53,12 @@ export default class MainGame extends Phaser.Scene {
       this.background.height / 2
     );
 
+    // initiating with health maybe
+    this.player.health = 50;
+
+    this.healthbar = this.add.text(20, 20, `health: ${this.player.health}`, { font: "50px Times New Roman", fill: "#ffffff"});
+    this.healthbar.setScrollFactor(0, 0)
+
     // powerups temp
     this.powerups = this.physics.add.staticGroup();
     // random gen
