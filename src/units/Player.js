@@ -22,6 +22,11 @@ export default class Player {
     // create group for bullets
     this.bulletGroup = this.scene.physics.add.group();
     this.bullets = [];
+    //tracking the sprite's health here
+    this.alive = true
+    // should we start the health at half? or full? 
+    this.health = 50
+    this.maxHealth = 100
 
     this.weaponTimer = 0;
 
@@ -105,5 +110,38 @@ export default class Player {
       });
       this.bullets.push(bullet);
     }
+  }
+
+  kill(){
+    //this gets called when the sprite has no more health
+    this.alive = false;
+    this.sprite.visible = false;
+
+  }
+
+  heal(amount){
+    // this gets called when the sprite completes some action
+    // picks up DNA? kills an enemy? or never?
+    // and his health increases
+    if(this.health > 0){
+      this.health += amount
+      if(this.health > this.maxHealth){
+        this.health = this.maxHealth
+      }
+    return this
+    }
+  }
+
+  damage(amount){
+    // this gets called when the sprite doesn't avoid an enemy
+    // and his health declines
+    // if his health reaches 0, he should die
+    if(this.health > 0){
+      this.health -= amount
+      if(this.health <= 0)
+        this.kill()
+      }
+    }
+    return this
   }
 }
