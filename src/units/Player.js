@@ -22,8 +22,6 @@ export default class Player {
     // create group for bullets
     this.bulletGroup = this.scene.physics.add.group();
     this.bullets = [];
-    //tracking the sprite's aliveness here
-    this.alive = true
 
     this.weaponTimer = 0;
 
