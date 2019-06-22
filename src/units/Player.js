@@ -37,7 +37,8 @@ export default class Player {
     this.bulletInterval = 0;
 
     // healthbar
-    this.health = 100;
+    this.health = 1000;
+    this.suffering = false;
 
     // controllers
     this.controller = new Controller(this.scene);
@@ -168,10 +169,21 @@ export default class Player {
     // this gets called when the sprite doesn't avoid an enemy
     // and his health declines
     // if his health reaches 0, he should die
-    if (this.health > 0) {
+    if (this.health > 0 && this.suffering === false) {
+      this.suffer();
       this.health -= amount;
-      if (this.health <= 0) this.kill();
+      // if (this.health <= 0) this.kill();
     }
     return this.health;
+  }
+
+  suffer() {
+    this.suffering = true;
+    // debugger;
+    this.sprite.setTintFill(0xffffff);
+    setTimeout(() => {
+      this.sprite.clearTint();
+      this.suffering = false;
+    }, 200);
   }
 }
