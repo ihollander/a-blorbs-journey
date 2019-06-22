@@ -6,6 +6,6 @@ export default class EyeballCluster extends Enemy {
   constructor(scene, x, y) {
     super(scene, x, y, EYEBALL_IMAGE, "Eyeball");
 
-    this.setScale(0.35, 0.35);
+    this.setScale(0.5, 0.5);
   }
 }

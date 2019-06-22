@@ -40,7 +40,12 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.destroy();
   }
 
-  update() {}
+  update() {
+    const playerx = this.scene.player.sprite.x;
+    const playery = this.scene.player.sprite.y;
+    const thisx = this.body.x;
+    const thisy = this.body.y;
+  }
 
   setInitialVelocity(x) {
     this.body.velocity.x = Phaser.Math.Between(-x, x);

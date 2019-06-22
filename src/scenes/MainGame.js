@@ -14,6 +14,7 @@ import {
   PLAYER4_IMAGE,
   PLAYER5_IMAGE,
   EYEBALL_IMAGE,
+  EYEBALL_CLUSTER_IMAGE,
   DNA_IMAGE,
   BACKGROUND_IMAGE,
   TOOTH_IMAGE
@@ -31,6 +32,7 @@ import tooth from "../assets/tooth.png";
 import bg from "../assets/background.png";
 import dna from "../assets/dna.png";
 import eyeball from "../assets/eyeball.png";
+import eyeballCluster from "../assets/eyeball-cluster.png";
 
 // sounds
 import thum2 from "../assets/sounds/thum2.mp3";
@@ -51,6 +53,7 @@ export default class MainGame extends Phaser.Scene {
     this.load.image(DNA_IMAGE, dna);
     this.load.audio(THUM2_SOUND, thum2);
     this.load.image(EYEBALL_IMAGE, eyeball);
+    this.load.image(EYEBALL_CLUSTER_IMAGE, eyeballCluster);
   }
 
   create() {
