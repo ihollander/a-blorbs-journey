@@ -5,7 +5,6 @@ export default class Bullet {
     this.sprite = group
       .create(x, y, TOOTH_IMAGE)
       .setScale(0.25, 0.25)
-      .setAngularVelocity(400)
       .setAngle(angle);
 
     // timer to destroy bullet
@@ -13,13 +12,6 @@ export default class Bullet {
 
     // movement logic
     this.speed = 1000;
-    scene.physics.velocityFromRotation(
-      this.sprite.rotation,
-      this.speed,
-      this.sprite.body.acceleration
-    );
-    this.sprite.body.velocity.x *= 2;
-    this.sprite.body.velocity.y *= 2;
   }
 
   get active() {

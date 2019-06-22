@@ -40,4 +40,8 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
       this.suffering = false;
     }, 200);
   }
+
+  logger() {
+    console.log("hi");
+  }
 }
