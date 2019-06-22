@@ -2,12 +2,14 @@ import Phaser from "phaser";
 
 import Player from "../units/Player";
 import Blorb from "../units/Blorb";
+import EyeballCluster from "../units/EyeballCluster";
 
 import {
   PLAYER1_IMAGE,
   PLAYER2_IMAGE,
   PLAYER3_IMAGE,
   PLAYER4_IMAGE,
+  EYEBALL_IMAGE,
   BACKGROUND_IMAGE,
   TOOTH_IMAGE
 } from "../consts/images";
@@ -19,6 +21,7 @@ import player4 from "../assets/player-4.png";
 import tooth from "../assets/tooth.png";
 import bg from "../assets/space.png";
 import bomb from "../assets/bomb.png";
+import eyeball from "../assets/eyeball.png";
 
 export default class MainGame extends Phaser.Scene {
   constructor() {
@@ -33,6 +36,7 @@ export default class MainGame extends Phaser.Scene {
     this.load.image(TOOTH_IMAGE, tooth);
     this.load.image(BACKGROUND_IMAGE, bg);
     this.load.image("bomb", bomb);
+    this.load.image(EYEBALL_IMAGE, eyeball);
   }
 
   create() {
@@ -79,7 +83,6 @@ export default class MainGame extends Phaser.Scene {
         this.player.health += 10;
         this.healthbar.setText(`health: ${this.player.health}`);
         powerup.destroy();
-        console.log("Health: ", this.player.health);
       }
     );
 
@@ -115,7 +118,7 @@ export default class MainGame extends Phaser.Scene {
       this.enemiesGroup,
       function(bullet, enemy) {
         if (enemy) {
-          enemy.destroy();
+          enemy.damage(1);
           bullet.destroy();
         }
       }
@@ -134,7 +137,11 @@ export default class MainGame extends Phaser.Scene {
   // Choose which enemies to spawn and spawn them
   spawnEnemies(currentEnemies) {
     if (currentEnemies.length <= this.maxEnemies) {
-      this.spawnBlorb();
+      if (Math.random() > 0.5) {
+        this.spawnBlorb();
+      } else {
+        this.spawnEyeballCluster();
+      }
     }
   }
 
@@ -147,6 +154,22 @@ export default class MainGame extends Phaser.Scene {
         Phaser.Math.Between(10, this.background.height)
       )
     );
+  }
+
+  spawnEyeballCluster() {
+    this.enemiesGroup.add(
+      new EyeballCluster(
+        this,
+        Phaser.Math.Between(10, this.background.width),
+        Phaser.Math.Between(10, this.background.height)
+      )
+    );
+  }
+
+  spawnEyeballs(spawnNum, x, y) {
+    for (let i = 0; i < spawnNum; i++) {
+      this.enemiesGroup.add(new Eyeball(this, x, y));
+    }
   }
 
   update() {
