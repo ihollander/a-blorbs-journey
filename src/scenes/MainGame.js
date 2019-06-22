@@ -56,9 +56,6 @@ export default class MainGame extends Phaser.Scene {
       this.background.height / 2
     );
 
-    // initiating with health maybe
-    this.player.health = 250;
-
     this.healthbar = this.add.text(20, 20, `health: ${this.player.health}`, {
       font: "50px Times New Roman",
       fill: "#ffffff"
@@ -142,18 +139,15 @@ export default class MainGame extends Phaser.Scene {
       this.player.sprite,
       this.enemiesGroup,
       (player, enemy) => {
-        if(enemy) {
+        if (enemy) {
           enemy.destroy();
-          this.player.health -= 5;
+          this.player.health -= 10;
           this.healthbar.setText(`health: ${this.player.health}`);
           // console.log("player", player, 'health', this.player.health);
         }
       }
     );
-
   }
-
-
 
   update() {
     this.player.update();
