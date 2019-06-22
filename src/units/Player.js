@@ -1,13 +1,11 @@
-import Tooth from "../weapons/Tooth";
-
+import Bullet from "../weapons/Bullet";
 import Controller from "../utils/Controller";
 
 import {
   PLAYER1_IMAGE,
   PLAYER2_IMAGE,
   PLAYER3_IMAGE,
-  PLAYER4_IMAGE,
-  PLAYER5_IMAGE
+  PLAYER4_IMAGE
 } from "../consts/images";
 
 export default class Player {
@@ -27,15 +25,15 @@ export default class Player {
       .setMaxVelocity(600);
 
     // create group for bullets
-    this.bulletGroup = this.scene.physics.add.group({
-      defaultKey: "bullets",
-      maxSize: 20
-    });
+    this.bulletGroup = this.scene.physics.add.group({});
     this.bullets = [];
+
     this.bulletInterval = 0;
 
     // healthbar
-    this.health = 100;
+    this.health = 10;
+
+
 
     // controllers
     this.controller = new Controller(this.scene);
@@ -46,31 +44,25 @@ export default class Player {
     controller.update();
 
     // transformations based on health
-    if (this.sprite.texture.key !== PLAYER1_IMAGE && this.health < 150) {
+    if (this.sprite.texture.key !== PLAYER1_IMAGE && this.health < 50) {
       this.sprite.setTexture(PLAYER1_IMAGE);
     } else if (
       this.sprite.texture.key !== PLAYER2_IMAGE &&
-      this.health >= 150 &&
-      this.health < 200
+      this.health >= 50 &&
+      this.health < 100
     ) {
       this.sprite.setTexture(PLAYER2_IMAGE);
     } else if (
       this.sprite.texture.key !== PLAYER3_IMAGE &&
-      this.health >= 200 &&
-      this.health < 250
+      this.health >= 100 &&
+      this.health < 150
     ) {
       this.sprite.setTexture(PLAYER3_IMAGE);
     } else if (
       this.sprite.texture.key !== PLAYER4_IMAGE &&
-      this.health >= 250 &&
-      this.health < 300
+      this.health >= 150
     ) {
       this.sprite.setTexture(PLAYER4_IMAGE);
-    } else if (
-      this.sprite.texture.key !== PLAYER5_IMAGE &&
-      this.health >= 300
-    ) {
-      this.sprite.setTexture(PLAYER5_IMAGE);
     }
 
     // vertical movement
@@ -130,9 +122,9 @@ export default class Player {
     this.bulletInterval--;
     if (this.bulletInterval <= 0) {
       this.bulletInterval = 20;
-      const bullet = new Tooth({
-        group: this.bulletGroup,
+      const bullet = new Bullet({
         scene: this.scene,
+        group: this.bulletGroup,
         x: this.sprite.x,
         y: this.sprite.y,
         angle: this.sprite.body.rotation + 70
@@ -141,34 +133,36 @@ export default class Player {
     }
   }
 
-  kill() {
+  kill(){
     //this gets called when the sprite has no more health
     this.alive = false;
     this.sprite.visible = false;
     // not sure what else we want to do when a game ends
   }
 
-  heal(amount) {
+  heal(amount){
     // this gets called when the sprite completes some action
     // picks up DNA? kills an enemy? or never?
     // and his health increases
-    if (this.health > 0) {
-      this.health += amount;
-      if (this.health > this.maxHealth) {
-        this.health = this.maxHealth;
+    if(this.health > 0){
+      this.health += amount
+      if(this.health > this.maxHealth){
+        this.health = this.maxHealth
       }
-      return this.health;
+    return this.health
     }
   }
 
-  damage(amount) {
+  damage(amount){
     // this gets called when the sprite doesn't avoid an enemy
     // and his health declines
     // if his health reaches 0, he should die
-    if (this.health > 0) {
-      this.health -= amount;
-      if (this.health <= 0) this.kill();
+    if(this.health > 0){
+      this.health -= amount
+      if(this.health <= 0)
+        this.kill()
+      }
+      return this.health
     }
-    return this.health;
+
   }
-}

@@ -58,7 +58,18 @@ export default class MainGame extends Phaser.Scene {
 
 
     // initiating with health maybe
-    this.player.health = 250;
+
+    const damageBar = new Phaser.Geom.Rectangle(25, 25, 300, 40)
+    let damageGraphics = this.add.graphics({fillStyle: {color: 0xFF0000} })
+    damageGraphics.fillRectShape(damageBar)
+    damageGraphics.setScrollFactor(0, 0)
+
+    let healthbar = new Phaser.Geom.Rectangle(25, 25, 300, 40)
+    let healthGraphics = this.add.graphics({fillStyle: {color: 0x7FFF00} })
+    healthGraphics.fillRectShape(healthbar)
+    healthGraphics.setScrollFactor(0, 0)
+
+    // this.player.health = 250;
 
    //  this.healthbar = this.add.text(20, 20, `health: ${this.player.health}`, {
    //   font: "50px Times New Roman",
@@ -66,11 +77,7 @@ export default class MainGame extends Phaser.Scene {
    // });
    // this.healthbar.setScrollFactor(0, 0);
 
-    const testbar = new Phaser.Geom.Rectangle(25, 25, 300, 40)
-    let graphics = this.add.graphics({fillStyle: {color: 0x0000ff} })
-    graphics.fillRectShape(testbar)
 
-    graphics.setScrollFactor(0, 0)
     // this.healthbar.setScrollFactor(0, 0);
 
     // powerups temp
@@ -88,9 +95,10 @@ export default class MainGame extends Phaser.Scene {
       this.powerups,
       (player, powerup) => {
         this.player.health += 10;
-        this.healthbar.setText(`health: ${this.player.health}`);
+        // whealthbar.scaleX(this.player.health / 350)
+        // this.healthbar.setText(`health: ${this.player.health}`);
         powerup.destroy();
-        console.log("Health: ", this.player.health);
+        console.log("healthbar", healthbar);
       }
     );
 
@@ -154,7 +162,7 @@ export default class MainGame extends Phaser.Scene {
         if (enemy) {
           enemy.destroy();
           this.player.health -= 10;
-          this.healthbar.setText(`health: ${this.player.health}`);
+          // this.healthbar.setText(`health: ${this.player.health}`);
           // console.log("player", player, 'health', this.player.health);
         }
       }
