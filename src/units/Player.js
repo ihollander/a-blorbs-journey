@@ -1,6 +1,6 @@
 import Bullet from "../weapons/Bullet";
 
-import { PLAYER_IMAGE } from "../consts/images";
+import { PLAYER_IMAGE } from "../consts/images"; 
 
 export default class Player {
   constructor(scene, x, y) {
