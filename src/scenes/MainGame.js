@@ -14,6 +14,9 @@ import {
   TOOTH_IMAGE
 } from "../consts/images";
 
+import { THUM2_SOUND } from "../consts/sounds";
+
+// image assets
 import player1 from "../assets/player-1.png";
 import player2 from "../assets/player-2.png";
 import player3 from "../assets/player-3.png";
@@ -22,6 +25,9 @@ import player5 from "../assets/player-5.png";
 import tooth from "../assets/tooth.png";
 import bg from "../assets/space.png";
 import bomb from "../assets/bomb.png";
+
+// sounds
+import thum2 from "../assets/sounds/thum2.mp3";
 
 export default class MainGame extends Phaser.Scene {
   constructor() {
@@ -37,6 +43,8 @@ export default class MainGame extends Phaser.Scene {
     this.load.image(TOOTH_IMAGE, tooth);
     this.load.image(BACKGROUND_IMAGE, bg);
     this.load.image("bomb", bomb);
+
+    this.load.audio(THUM2_SOUND, thum2);
   }
 
   create() {
@@ -57,21 +65,20 @@ export default class MainGame extends Phaser.Scene {
       this.background.height / 2
     );
 
-
     // initiating with health maybe
     this.player.health = 250;
 
-   //  this.healthbar = this.add.text(20, 20, `health: ${this.player.health}`, {
-   //   font: "50px Times New Roman",
-   //   fill: "#ffffff"
-   // });
-   // this.healthbar.setScrollFactor(0, 0);
+    //  this.healthbar = this.add.text(20, 20, `health: ${this.player.health}`, {
+    //   font: "50px Times New Roman",
+    //   fill: "#ffffff"
+    // });
+    // this.healthbar.setScrollFactor(0, 0);
 
-    const testbar = new Phaser.Geom.Rectangle(25, 25, 300, 40)
-    let graphics = this.add.graphics({fillStyle: {color: 0x0000ff} })
-    graphics.fillRectShape(testbar)
+    const testbar = new Phaser.Geom.Rectangle(25, 25, 300, 40);
+    let graphics = this.add.graphics({ fillStyle: { color: 0x0000ff } });
+    graphics.fillRectShape(testbar);
 
-    graphics.setScrollFactor(0, 0)
+    graphics.setScrollFactor(0, 0);
     // this.healthbar.setScrollFactor(0, 0);
 
     // powerups temp
@@ -126,7 +133,6 @@ export default class MainGame extends Phaser.Scene {
       this.handleBulletEnemyCollider.bind(this)
     );
 
-
     this.physics.add.collider(
       this.player.sprite,
       this.enemiesGroup,
@@ -155,7 +161,6 @@ export default class MainGame extends Phaser.Scene {
     if (enemy) {
       enemy.destroy();
       this.player.health -= 10;
-      this.healthbar.setText(`health: ${this.player.health}`);
     }
   }
 

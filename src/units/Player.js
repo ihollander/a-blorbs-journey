@@ -10,6 +10,8 @@ import {
   PLAYER5_IMAGE
 } from "../consts/images";
 
+import { THUM2_SOUND } from "../consts/sounds";
+
 export default class Player {
   constructor(scene, x, y) {
     this.scene = scene;
@@ -137,6 +139,7 @@ export default class Player {
         y: this.sprite.y,
         angle: this.sprite.body.rotation + 70
       });
+      this.scene.sound.play(THUM2_SOUND);
       this.bullets.push(bullet);
     }
   }
