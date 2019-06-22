@@ -1,8 +1,11 @@
 import Phaser from "phaser";
 
 import Player from "../units/Player";
-import Blorb from "../units/Blorb";
 import Enemy from "../units/Enemy";
+import Blorb from "../units/Blorb";
+
+import EyeballCluster from "../units/EyeballCluster";
+import Eyeball from "../units/Eyeball";
 
 import {
   PLAYER1_IMAGE,
@@ -10,6 +13,7 @@ import {
   PLAYER3_IMAGE,
   PLAYER4_IMAGE,
   PLAYER5_IMAGE,
+  EYEBALL_IMAGE,
   BACKGROUND_IMAGE,
   TOOTH_IMAGE
 } from "../consts/images";
@@ -25,6 +29,7 @@ import player5 from "../assets/player-5.png";
 import tooth from "../assets/tooth.png";
 import bg from "../assets/space.png";
 import bomb from "../assets/bomb.png";
+import eyeball from "../assets/eyeball.png";
 
 // sounds
 import thum2 from "../assets/sounds/thum2.mp3";
@@ -43,8 +48,8 @@ export default class MainGame extends Phaser.Scene {
     this.load.image(TOOTH_IMAGE, tooth);
     this.load.image(BACKGROUND_IMAGE, bg);
     this.load.image("bomb", bomb);
-
     this.load.audio(THUM2_SOUND, thum2);
+    this.load.image(EYEBALL_IMAGE, eyeball);
   }
 
   create() {
@@ -84,6 +89,14 @@ export default class MainGame extends Phaser.Scene {
     // powerups temp
     this.powerups = this.physics.add.staticGroup();
 
+    // random gen
+    for (let i = 1; i <= 40; i++) {
+      const x = Phaser.Math.Between(0, this.background.width);
+      const y = Phaser.Math.Between(0, this.background.height);
+
+      this.powerups.create(x, y, "bomb").setScale(2);
+    }
+
     // camera
     this.cameras.main.setBounds(
       0,
@@ -103,24 +116,10 @@ export default class MainGame extends Phaser.Scene {
     this.time.addEvent({
       delay: 1000,
       callback: function() {
-        const enemiesArray = Array.from(this.enemiesGroup.getChildren());
-        // Set all blorbs to random vector
-        enemiesArray.forEach(function(blorb) {
-          blorb.body.velocity.y = Phaser.Math.Between(-100, 100);
-          blorb.body.velocity.x = Phaser.Math.Between(-100, 100);
-        });
+        const currentEnemies = Array.from(this.enemiesGroup.getChildren());
 
-        // New blorb if not too many blorbs
-        if (enemiesArray.length <= this.maxEnemies) {
-          var enemy = new Blorb(
-            this,
-            Phaser.Math.Between(10, this.background.width),
-            Phaser.Math.Between(10, this.background.height)
-          );
-          // Add blorb to group
-          this.enemiesGroup.add(enemy);
-          // this.enemiesGroup.create()
-        }
+        this.danceBlorbs(currentEnemies);
+        this.spawnEnemies(currentEnemies);
       }, // End callback for adding enemies
       callbackScope: this,
       loop: true
@@ -130,7 +129,12 @@ export default class MainGame extends Phaser.Scene {
     this.physics.add.collider(
       this.player.bulletGroup,
       this.enemiesGroup,
-      this.handleBulletEnemyCollider.bind(this)
+      (bullet, enemy) => {
+        if (enemy) {
+          enemy.damage(1);
+          bullet.destroy();
+        }
+      }
     );
 
     this.physics.add.collider(
@@ -145,6 +149,56 @@ export default class MainGame extends Phaser.Scene {
       this.powerups,
       this.handlePlayerPowerupOverlap.bind(this)
     );
+  }
+
+  // Set all blorbs to random vector
+  danceBlorbs(currentEnemies) {
+    currentEnemies
+      .filter(enemy => enemy.constructor.name === "Blorb")
+      .forEach(function(blorb) {
+        blorb.dance();
+      });
+  }
+
+  // Choose which enemies to spawn and spawn them
+  spawnEnemies(currentEnemies) {
+    if (currentEnemies.length <= this.maxEnemies) {
+      if (Math.random() > 0.5) {
+        this.spawnBlorb();
+      } else {
+        this.spawnEyeballCluster();
+      }
+    }
+  }
+
+  // Spawn a blorb
+  spawnBlorb() {
+    this.enemiesGroup.add(
+      new Blorb(
+        this,
+        Phaser.Math.Between(10, this.background.width),
+        Phaser.Math.Between(10, this.background.height)
+      )
+    );
+  }
+
+  spawnEyeballCluster() {
+    const eyeballCluster = new EyeballCluster(
+      this,
+      Phaser.Math.Between(10, this.background.width),
+      Phaser.Math.Between(10, this.background.height)
+    );
+    this.enemiesGroup.add(eyeballCluster);
+    eyeballCluster.setInitialVelocity(50);
+  }
+
+  spawnEyeballs(spawnNum, x, y) {
+    console.log(`Spawning ${spawnNum} eyeballs!`);
+    for (let i = 0; i < spawnNum; i++) {
+      const eyeball = new Eyeball(this, x, y);
+      this.enemiesGroup.add(eyeball);
+      eyeball.setInitialVelocity(400);
+    }
   }
 
   update() {
