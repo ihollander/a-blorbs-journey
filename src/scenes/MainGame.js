@@ -30,9 +30,6 @@ export default class MainGame extends Phaser.Scene {
       this.background.height
     );
 
-
-
-
     this.player = new Player(
       this,
       this.background.width / 2,
@@ -42,7 +39,8 @@ export default class MainGame extends Phaser.Scene {
     // initiating with health maybe
     this.player.health = 50;
 
-    this.add.text(100, 100, `health: ${this.player.health}`, { font: "50px Times New Roman", fill: "#ffffff"});
+    this.healthbar = this.add.text(20, 20, `health: ${this.player.health}`, { font: "50px Times New Roman", fill: "#ffffff"});
+    this.healthbar.setScrollFactor(0, 0)
 
     // camera
     this.cameras.main.setBounds(
@@ -52,6 +50,7 @@ export default class MainGame extends Phaser.Scene {
       this.background.height
     );
     this.cameras.main.startFollow(this.player.sprite, true, 0.5, 0.5);
+
   }
 
   update() {
