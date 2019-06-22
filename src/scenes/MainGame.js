@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 import Player from "../units/Player";
+import Blorb from "../units/Blorb";
 
 import {
   PLAYER1_IMAGE,
@@ -77,6 +78,48 @@ export default class MainGame extends Phaser.Scene {
       this.background.height
     );
     this.cameras.main.startFollow(this.player.sprite, true, 0.5, 0.5);
+
+    this.enemiesGroup = this.add.group();
+
+    this.maxEnemies = 10;
+    // this.enemies = [];
+
+    this.time.addEvent({
+      delay: 1000,
+      callback: function() {
+        // Set all blorbs to random vector
+        console.log(this.enemiesGroup.getChildren());
+        Array.from(this.enemiesGroup.getChildren).forEach(function(blorb) {
+          blorb.body.velocity.y = Phaser.Math.Between(-100, 100);
+          blorb.body.velocity.x = Phaser.Math.Between(-100, 100);
+        });
+
+        // New blorb if not too many blorbs
+        if (this.enemies.length <= this.maxEnemies) {
+          var enemy = new Blorb(
+            this,
+            Phaser.Math.Between(10, this.background.width),
+            Phaser.Math.Between(10, this.background.height)
+          );
+          // Add blorb to group
+          this.enemiesGroup.add(blorb);
+        }
+      }, // End callback for adding enemies
+
+      callbackScope: this,
+      loop: true
+    });
+
+    this.physics.add.collider(
+      this.player.bulletGroup,
+      this.enemiesGroup,
+      function(bullet, enemy) {
+        if (enemy) {
+          enemy.destroy();
+          bullet.destroy();
+        }
+      }
+    );
   }
 
   update() {
