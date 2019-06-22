@@ -56,11 +56,22 @@ export default class MainGame extends Phaser.Scene {
       this.background.height / 2
     );
 
-    this.healthbar = this.add.text(20, 20, `health: ${this.player.health}`, {
-      font: "50px Times New Roman",
-      fill: "#ffffff"
-    });
-    this.healthbar.setScrollFactor(0, 0);
+
+    // initiating with health maybe
+    this.player.health = 250;
+
+   //  this.healthbar = this.add.text(20, 20, `health: ${this.player.health}`, {
+   //   font: "50px Times New Roman",
+   //   fill: "#ffffff"
+   // });
+   // this.healthbar.setScrollFactor(0, 0);
+
+    const testbar = new Phaser.Geom.Rectangle(25, 25, 300, 40)
+    let graphics = this.add.graphics({fillStyle: {color: 0x0000ff} })
+    graphics.fillRectShape(testbar)
+
+    graphics.setScrollFactor(0, 0)
+    // this.healthbar.setScrollFactor(0, 0);
 
     // powerups temp
     this.powerups = this.physics.add.staticGroup();
@@ -134,6 +145,7 @@ export default class MainGame extends Phaser.Scene {
         }
       }
     );
+
 
     this.physics.add.collider(
       this.player.sprite,
