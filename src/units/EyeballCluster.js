@@ -18,7 +18,13 @@ export default class EyeballCluster extends Enemy {
       this.health -= x;
 
       if (this.health <= 0) {
-        this.scene.spawnEyeballs(4, this.x, this.y);
+        // Spawn a random number of eyeballs
+        this.scene.spawnEyeballs(
+          Math.floor(Math.random() * 5) + 2,
+          this.x,
+          this.y
+        );
+        // And then destroy
         this.destroy();
       } else {
         this.suffer();
