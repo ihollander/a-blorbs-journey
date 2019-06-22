@@ -3,6 +3,7 @@ import Phaser from "phaser";
 import Player from "../units/Player";
 import Blorb from "../units/Blorb";
 import EyeballCluster from "../units/EyeballCluster";
+import Enemy from "../units/Enemy";
 
 import {
   PLAYER1_IMAGE,
@@ -95,7 +96,9 @@ export default class MainGame extends Phaser.Scene {
     );
     this.cameras.main.startFollow(this.player.sprite, true, 0.5, 0.5);
 
-    this.enemiesGroup = this.add.group();
+    this.enemiesGroup = this.physics.add.group({
+      classType: Enemy
+    });
 
     this.maxEnemies = 10;
     // this.enemies = [];
@@ -116,7 +119,7 @@ export default class MainGame extends Phaser.Scene {
     this.physics.add.collider(
       this.player.bulletGroup,
       this.enemiesGroup,
-      function(bullet, enemy) {
+      (bullet, enemy) => {
         if (enemy) {
           enemy.damage(1);
           bullet.destroy();
