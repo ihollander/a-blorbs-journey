@@ -88,6 +88,30 @@ export default class Player {
 
     // rotation & firing
     if (
+      cursors.up.isDown && cursors.right.isDown
+      // pad stuff
+    ) {
+      sprite.setAngle(this.angleOffset + 225);
+      this.fire();
+    } else if (
+      cursors.down.isDown && cursors.right.isDown
+      // pad stuff
+    ) {
+      sprite.setAngle(this.angleOffset + 315);
+      this.fire();
+    } else if (
+      cursors.down.isDown && cursors.left.isDown
+      // pad stuff
+    ) {
+      sprite.setAngle(this.angleOffset + 45);
+      this.fire();
+    } else if (
+      cursors.up.isDown && cursors.left.isDown
+      // pad stuff
+    ) {
+      sprite.setAngle(this.angleOffset + 135);
+      this.fire();
+    } else if (
       cursors.up.isDown ||
       (pad &&
         pad.axes[4].value < -pad.axes[4].threshold &&
