@@ -109,10 +109,9 @@ export default class MainGame extends Phaser.Scene {
     this.time.addEvent({
       delay: 1000,
       callback: function() {
-        const currentEnemies = Array.from(this.enemiesGroup.getChildren());
-        this.danceBlorbs(currentEnemies);
-        this.spawnEnemies(currentEnemies);
-        this.cleanupEnemies(currentEnemies);
+        this.danceBlorbs(this.currentEnemies());
+        this.spawnEnemies(this.currentEnemies());
+        this.cleanupEnemies(this.currentEnemies());
       }, // End callback for adding enemies
       callbackScope: this,
       loop: true
@@ -204,6 +203,7 @@ export default class MainGame extends Phaser.Scene {
 
   update() {
     this.player.update();
+    this.currentEnemies().forEach(enemy => enemy.update());
   }
 
   handlePlayerPowerupOverlap(player, powerup) {
@@ -217,6 +217,10 @@ export default class MainGame extends Phaser.Scene {
       this.player.damage(10);
       // TODO: This damage should depend on the type of enemy
     }
+  }
+
+  currentEnemies() {
+    return Array.from(this.enemiesGroup.getChildren());
   }
 
   handleBulletEnemyCollider(bullet, enemy) {

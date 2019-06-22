@@ -12,7 +12,6 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.setData("type", type);
     this.setData("isDead", false);
     this.body.setCollideWorldBounds(true);
-    console.log(this);
     this.angle = Math.random() * 360;
 
     this.health = 1;
@@ -40,6 +39,8 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     }
     this.destroy();
   }
+
+  update() {}
 
   setInitialVelocity(x) {
     this.body.velocity.x = Phaser.Math.Between(-x, x);
