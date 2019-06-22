@@ -1,17 +1,22 @@
 import Bullet from "../weapons/Bullet";
 import Controller from "../utils/Controller";
 
-import { PLAYER_IMAGE } from "../consts/images";
+import {
+  PLAYER1_IMAGE,
+  PLAYER2_IMAGE,
+  PLAYER3_IMAGE,
+  PLAYER4_IMAGE
+} from "../consts/images";
 
 export default class Player {
   constructor(scene, x, y) {
     this.scene = scene;
 
     // create physics-based sprite
-    // angle offset
+    // angle offset for slightly tilty sprite
     this.angleOffset = 18;
     this.sprite = scene.physics.add
-      .sprite(x, y, PLAYER_IMAGE, 0)
+      .sprite(x, y, PLAYER1_IMAGE, 0)
       .setAngle(this.angleOffset)
       .setCollideWorldBounds(true)
       .setScale(0.25, 0.25)
@@ -20,12 +25,15 @@ export default class Player {
       .setMaxVelocity(600);
 
     // create group for bullets
-    this.bulletGroup = this.scene.physics.add.group();
+    this.bulletGroup = this.scene.physics.add.group({});
     this.bullets = [];
 
-    this.weaponTimer = 0;
+    this.bulletInterval = 0;
 
-    // control class
+    // healthbar
+    this.health = 10;
+
+    // controllers
     this.controller = new Controller(this.scene);
   }
 
@@ -33,13 +41,29 @@ export default class Player {
     const { controller, sprite } = this;
     controller.update();
 
-    let pad;
-    if (this.scene.input.gamepad.total) {
-      pad = this.scene.input.gamepad.getPad(0) || this.scene.input.gamepad.pad1;
+    // transformations based on health
+    if (this.sprite.texture.key !== PLAYER1_IMAGE && this.health < 50) {
+      this.sprite.setTexture(PLAYER1_IMAGE);
+    } else if (
+      this.sprite.texture.key !== PLAYER2_IMAGE &&
+      this.health >= 50 &&
+      this.health < 100
+    ) {
+      this.sprite.setTexture(PLAYER2_IMAGE);
+    } else if (
+      this.sprite.texture.key !== PLAYER3_IMAGE &&
+      this.health >= 100 &&
+      this.health < 150
+    ) {
+      this.sprite.setTexture(PLAYER3_IMAGE);
+    } else if (
+      this.sprite.texture.key !== PLAYER4_IMAGE &&
+      this.health >= 150
+    ) {
+      this.sprite.setTexture(PLAYER4_IMAGE);
     }
 
-    // keyboard movement
-    // vertical
+    // vertical movement
     if (controller.moveUp) {
       sprite.body.setAccelerationY(-300);
     } else if (controller.moveDown) {
@@ -48,7 +72,7 @@ export default class Player {
       sprite.body.setAccelerationY(0);
     }
 
-    // horizontal
+    // horizontal movement
     if (controller.moveLeft) {
       sprite.body.setAccelerationX(-300);
     } else if (controller.moveRight) {
@@ -93,9 +117,9 @@ export default class Player {
 
   fire() {
     // only allow fire at interval
-    this.weaponTimer--;
-    if (this.weaponTimer <= 0) {
-      this.weaponTimer = 20;
+    this.bulletInterval--;
+    if (this.bulletInterval <= 0) {
+      this.bulletInterval = 20;
       const bullet = new Bullet({
         scene: this.scene,
         group: this.bulletGroup,

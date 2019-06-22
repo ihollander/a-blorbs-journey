@@ -28,13 +28,12 @@ export default class Bullet {
 
   update() {
     this.lifespan--;
-    if (this.lifespan <= 0) {
-      this.sprite.setActive(false);
-      this.sprite.setVisible(false);
-    }
-  }
 
-  handleOutOfBounds() {
-    this.sprite.destroy();
+    if (this.sprite.active && this.lifespan <= 0) {
+      // this.sprite.setActive(false);
+      // this.sprite.setVisible(false);
+      this.sprite.disableBody(true, true);
+      this.sprite.destroy(); // ??
+    }
   }
 }
