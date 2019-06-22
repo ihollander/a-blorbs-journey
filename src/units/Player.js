@@ -1,7 +1,12 @@
 import Bullet from "../weapons/Bullet";
 import Controller from "../utils/Controller";
 
-import { PLAYER1_IMAGE, PLAYER2_IMAGE, PLAYER3_IMAGE } from "../consts/images";
+import {
+  PLAYER1_IMAGE,
+  PLAYER2_IMAGE,
+  PLAYER3_IMAGE,
+  PLAYER4_IMAGE
+} from "../consts/images";
 
 export default class Player {
   constructor(scene, x, y) {
@@ -37,19 +42,25 @@ export default class Player {
     controller.update();
 
     // transformations based on health
-    if (this.sprite.texture.key !== PLAYER1_IMAGE && this.health < 100) {
+    if (this.sprite.texture.key !== PLAYER1_IMAGE && this.health < 50) {
       this.sprite.setTexture(PLAYER1_IMAGE);
     } else if (
       this.sprite.texture.key !== PLAYER2_IMAGE &&
-      this.health >= 100 &&
-      this.health < 200
+      this.health >= 50 &&
+      this.health < 100
     ) {
       this.sprite.setTexture(PLAYER2_IMAGE);
     } else if (
       this.sprite.texture.key !== PLAYER3_IMAGE &&
-      this.health >= 200
+      this.health >= 100 &&
+      this.health < 150
     ) {
       this.sprite.setTexture(PLAYER3_IMAGE);
+    } else if (
+      this.sprite.texture.key !== PLAYER4_IMAGE &&
+      this.health >= 150
+    ) {
+      this.sprite.setTexture(PLAYER4_IMAGE);
     }
 
     // vertical movement
