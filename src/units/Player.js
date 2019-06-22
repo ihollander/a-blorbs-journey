@@ -1,19 +1,20 @@
 import Bullet from "../weapons/Bullet";
+import Controller from "../utils/Controller";
 
-import { PLAYER_IMAGE } from "../consts/images"; 
+import { PLAYER1_IMAGE, PLAYER2_IMAGE, PLAYER3_IMAGE } from "../consts/images";
 
 export default class Player {
   constructor(scene, x, y) {
     this.scene = scene;
 
     // create physics-based sprite
-    // angle offset
+    // angle offset for slightly tilty sprite
     this.angleOffset = 18;
     this.sprite = scene.physics.add
-      .sprite(x, y, PLAYER_IMAGE, 0)
+      .sprite(x, y, PLAYER1_IMAGE, 0)
       .setAngle(this.angleOffset)
       .setCollideWorldBounds(true)
-      .setScale(0.15, 0.15)
+      .setScale(0.25, 0.25)
       .setDrag(300)
       .setAngularDrag(400)
       .setMaxVelocity(600);
@@ -22,125 +23,76 @@ export default class Player {
     this.bulletGroup = this.scene.physics.add.group();
     this.bullets = [];
 
-    this.weaponTimer = 0;
+    this.bulletInterval = 0;
 
-    // Track the arrow keys for movement
-    this.cursors = this.scene.input.keyboard.createCursorKeys();
+    // healthbar
+    this.health = 10;
 
-    // Track the WASD keys for firing direction
-    const { W, A, S, D } = Phaser.Input.Keyboard.KeyCodes;
-    this.wasds = {
-      up: scene.input.keyboard.addKey(W),
-      left: scene.input.keyboard.addKey(A),
-      down: scene.input.keyboard.addKey(S),
-      right: scene.input.keyboard.addKey(D)
-    };
-
-    // gamepad
+    // controllers
+    this.controller = new Controller(this.scene);
   }
 
   update(time, delta) {
-    const { cursors, wasds, sprite } = this;
+    const { controller, sprite } = this;
+    controller.update();
 
-    let pad;
-    if (this.scene.input.gamepad.total) {
-      pad = this.scene.input.gamepad.getPad(0) || this.scene.input.gamepad.pad1;
+    // transformations based on health
+    if (this.sprite.texture.key !== PLAYER1_IMAGE && this.health < 100) {
+      this.sprite.setTexture(PLAYER1_IMAGE);
+    } else if (
+      this.sprite.texture.key !== PLAYER2_IMAGE &&
+      this.health >= 100 &&
+      this.health < 200
+    ) {
+      this.sprite.setTexture(PLAYER2_IMAGE);
+    } else if (
+      this.sprite.texture.key !== PLAYER3_IMAGE &&
+      this.health >= 200
+    ) {
+      this.sprite.setTexture(PLAYER3_IMAGE);
     }
 
-    // keyboard movement
-    // vertical
-    if (
-      wasds.up.isDown ||
-      (pad &&
-        pad.axes[1].value < -pad.axes[1].threshold &&
-        pad.axes[1].value < -0.5)
-    ) {
+    // vertical movement
+    if (controller.moveUp) {
       sprite.body.setAccelerationY(-300);
-    } else if (
-      wasds.down.isDown ||
-      (pad &&
-        pad.axes[1].value > pad.axes[1].threshold &&
-        pad.axes[1].value > 0.5)
-    ) {
+    } else if (controller.moveDown) {
       sprite.body.setAccelerationY(300);
     } else {
       sprite.body.setAccelerationY(0);
     }
 
-    // horizontal
-    if (
-      wasds.left.isDown ||
-      (pad &&
-        pad.axes[0].value < -pad.axes[0].threshold &&
-        pad.axes[0].value < -0.5)
-    ) {
+    // horizontal movement
+    if (controller.moveLeft) {
       sprite.body.setAccelerationX(-300);
-    } else if (
-      wasds.right.isDown ||
-      (pad &&
-        pad.axes[0].value > pad.axes[0].threshold &&
-        pad.axes[0].value > -0.5)
-    ) {
+    } else if (controller.moveRight) {
       sprite.body.setAccelerationX(300);
     } else {
       sprite.body.setAccelerationX(0);
     }
 
     // rotation & firing
-    if (
-      cursors.up.isDown && cursors.right.isDown
-      // pad stuff
-    ) {
+    if (controller.shootUp && controller.shootRight) {
       sprite.setAngle(this.angleOffset + 225);
       this.fire();
-    } else if (
-      cursors.down.isDown && cursors.right.isDown
-      // pad stuff
-    ) {
+    } else if (controller.shootDown && controller.shootRight) {
       sprite.setAngle(this.angleOffset + 315);
       this.fire();
-    } else if (
-      cursors.down.isDown && cursors.left.isDown
-      // pad stuff
-    ) {
+    } else if (controller.shootDown && controller.shootLeft) {
       sprite.setAngle(this.angleOffset + 45);
       this.fire();
-    } else if (
-      cursors.up.isDown && cursors.left.isDown
-      // pad stuff
-    ) {
+    } else if (controller.shootUp && controller.shootLeft) {
       sprite.setAngle(this.angleOffset + 135);
       this.fire();
-    } else if (
-      cursors.up.isDown ||
-      (pad &&
-        pad.axes[4].value < -pad.axes[4].threshold &&
-        pad.axes[4].value < -0.5)
-    ) {
+    } else if (controller.shootUp) {
       sprite.setAngle(this.angleOffset + 180);
       this.fire();
-    } else if (
-      cursors.right.isDown ||
-      (pad &&
-        pad.axes[3].value > pad.axes[3].threshold &&
-        pad.axes[3].value > 0.5)
-    ) {
+    } else if (controller.shootRight) {
       sprite.setAngle(this.angleOffset + 270);
       this.fire();
-    } else if (
-      cursors.down.isDown ||
-      (pad &&
-        pad.axes[4].value > pad.axes[4].threshold &&
-        pad.axes[4].value > 0.5)
-    ) {
+    } else if (controller.shootDown) {
       sprite.setAngle(this.angleOffset);
       this.fire();
-    } else if (
-      cursors.left.isDown ||
-      (pad &&
-        pad.axes[3].value < -pad.axes[3].threshold &&
-        pad.axes[3].value < -0.5)
-    ) {
+    } else if (controller.shootLeft) {
       sprite.setAngle(this.angleOffset + 90);
       this.fire();
     }
@@ -154,9 +106,9 @@ export default class Player {
 
   fire() {
     // only allow fire at interval
-    this.weaponTimer--;
-    if (this.weaponTimer <= 0) {
-      this.weaponTimer = 20;
+    this.bulletInterval--;
+    if (this.bulletInterval <= 0) {
+      this.bulletInterval = 20;
       const bullet = new Bullet({
         scene: this.scene,
         group: this.bulletGroup,

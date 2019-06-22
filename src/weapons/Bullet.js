@@ -20,6 +20,8 @@ export default class Bullet {
     );
     this.sprite.body.velocity.x *= 2;
     this.sprite.body.velocity.y *= 2;
+
+    // this.sprite.update = this.update;
   }
 
   get active() {
@@ -31,6 +33,7 @@ export default class Bullet {
     if (this.lifespan <= 0) {
       this.sprite.setActive(false);
       this.sprite.setVisible(false);
+      this.sprite.destroy(); // extra?
     }
   }
 

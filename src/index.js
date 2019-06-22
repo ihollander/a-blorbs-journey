@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import MainGame from "./scenes/MainGame";
 
-var config = {
+const config = {
   type: Phaser.AUTO,
   width: 1280,
   height: 720,
