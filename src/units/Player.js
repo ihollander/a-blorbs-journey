@@ -7,8 +7,11 @@ export default class Player {
     this.scene = scene;
 
     // create physics-based sprite
+    // angle offset
+    this.angleOffset = 18;
     this.sprite = scene.physics.add
       .sprite(x, y, PLAYER_IMAGE, 0)
+      .setAngle(this.angleOffset)
       .setCollideWorldBounds(true)
       .setScale(0.15, 0.15)
       .setDrag(300)
@@ -21,54 +24,75 @@ export default class Player {
 
     this.weaponTimer = 0;
 
-    // Track the arrow keys
+    // Track the arrow keys for movement
     this.cursors = this.scene.input.keyboard.createCursorKeys();
+
+    // Track the WASD keys for firing direction
+    const { W, A, S, D } = Phaser.Input.Keyboard.KeyCodes;
+    this.wasds = {
+      up: scene.input.keyboard.addKey(W),
+      left: scene.input.keyboard.addKey(A),
+      down: scene.input.keyboard.addKey(S),
+      right: scene.input.keyboard.addKey(D)
+    };
   }
 
   update(time, delta) {
-    const { cursors, sprite } = this;
+    const { cursors, wasds, sprite } = this;
 
-    if (cursors.left.isDown) {
-      sprite.setAngularVelocity(-150);
-    } else if (cursors.right.isDown) {
-      sprite.setAngularVelocity(150);
+    // vertical
+    if (wasds.up.isDown) {
+      sprite.body.setAccelerationY(-300);
+    } else if (wasds.down.isDown) {
+      sprite.body.setAccelerationY(300);
     } else {
-      sprite.setAngularVelocity(0);
+      sprite.body.setAccelerationY(0);
     }
 
+    // horizontal
+    if (wasds.left.isDown) {
+      sprite.body.setAccelerationX(-300);
+    } else if (wasds.right.isDown) {
+      sprite.body.setAccelerationX(300);
+    } else {
+      sprite.body.setAccelerationX(0);
+    }
+
+    // rotation & firing
     if (cursors.up.isDown) {
-      this.scene.physics.velocityFromRotation(
-        sprite.rotation,
-        600,
-        sprite.body.acceleration
-      );
-    } else {
-      sprite.setAcceleration(0);
+      sprite.setAngle(this.angleOffset + 180);
+      this.fire();
+    } else if (cursors.right.isDown) {
+      sprite.setAngle(this.angleOffset + 270);
+      this.fire();
+    } else if (cursors.down.isDown) {
+      sprite.setAngle(this.angleOffset);
+      this.fire();
+    } else if (cursors.left.isDown) {
+      sprite.setAngle(this.angleOffset + 90);
+      this.fire();
     }
 
-    this.weaponTimer--;
-    if (cursors.space.isDown) {
-      if (this.weaponTimer <= 0) {
-        this.weaponTimer = 20;
-        this.fire();
-      }
-    }
-
-    // update bullets
+    // update/cleanup bullets
     this.bullets = this.bullets.filter(bullet => {
       bullet.update(); // call update
-      return bullet.active; // filter not active
+      return bullet.active; // filter out not active
     });
   }
 
   fire() {
-    const bullet = new Bullet({
-      scene: this.scene,
-      group: this.bulletGroup,
-      x: this.sprite.x,
-      y: this.sprite.y,
-      angle: this.sprite.body.rotation + 70
-    });
-    this.bullets.push(bullet);
+    // only allow fire at interval
+    this.weaponTimer--;
+    if (this.weaponTimer <= 0) {
+      this.weaponTimer = 20;
+      const bullet = new Bullet({
+        scene: this.scene,
+        group: this.bulletGroup,
+        x: this.sprite.x,
+        y: this.sprite.y,
+        angle: this.sprite.body.rotation + 70
+      });
+      this.bullets.push(bullet);
+    }
   }
 }
