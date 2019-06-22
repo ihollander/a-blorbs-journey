@@ -22,11 +22,8 @@ export default class Player {
     // create group for bullets
     this.bulletGroup = this.scene.physics.add.group();
     this.bullets = [];
-    //tracking the sprite's health here
+    //tracking the sprite's aliveness here
     this.alive = true
-    // should we start the health at half? or full?
-    this.health = 50
-    this.maxHealth = 100
 
     this.weaponTimer = 0;
 
@@ -141,8 +138,7 @@ export default class Player {
       if(this.health <= 0)
         this.kill()
       }
-      return this.health 
+      return this.health
     }
 
   }
-}
