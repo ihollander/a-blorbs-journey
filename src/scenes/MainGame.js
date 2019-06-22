@@ -110,9 +110,9 @@ export default class MainGame extends Phaser.Scene {
       delay: 1000,
       callback: function() {
         const currentEnemies = Array.from(this.enemiesGroup.getChildren());
-
         this.danceBlorbs(currentEnemies);
         this.spawnEnemies(currentEnemies);
+        this.cleanupEnemies(currentEnemies);
       }, // End callback for adding enemies
       callbackScope: this,
       loop: true
@@ -187,6 +187,20 @@ export default class MainGame extends Phaser.Scene {
       this.enemiesGroup.add(eyeball);
       eyeball.setInitialVelocity(400);
     }
+  }
+
+  cleanupEnemies(currentEnemies) {
+    currentEnemies.forEach(enemy => {
+      const { x, y } = enemy.body;
+      if (
+        x > this.background.width + 100 ||
+        x < -100 ||
+        y > this.background.height + 100 ||
+        y < -100
+      ) {
+        enemy.destroy();
+      }
+    });
   }
 
   update() {
