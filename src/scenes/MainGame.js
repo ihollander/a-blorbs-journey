@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 
 import Player from "../units/Player";
+import Blorb from "../units/Blorb";
 
 import { PLAYER_IMAGE, BACKGROUND_IMAGE, TOOTH_IMAGE } from "../consts/images";
 
@@ -15,6 +16,7 @@ export default class MainGame extends Phaser.Scene {
 
   preload() {
     this.load.image(PLAYER_IMAGE, player);
+    // this.load.image(BLORB_IMAGE, blorb);
     this.load.image(TOOTH_IMAGE, tooth);
     this.load.image(BACKGROUND_IMAGE, bg);
   }
@@ -31,6 +33,12 @@ export default class MainGame extends Phaser.Scene {
     );
 
     this.player = new Player(
+      this,
+      this.background.width / 2,
+      this.background.height / 2
+    );
+
+    this.blorb = new Blorb(
       this,
       this.background.width / 2,
       this.background.height / 2
