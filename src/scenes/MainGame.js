@@ -31,7 +31,7 @@ export default class MainGame extends Phaser.Scene {
     );
 
 
-    this.add.text(100, 100, `health`, { font: "50px Times New Roman", fill: "#ffffff"});
+
 
     this.player = new Player(
       this,
@@ -41,6 +41,8 @@ export default class MainGame extends Phaser.Scene {
 
     // initiating with health maybe
     this.player.health = 50;
+
+    this.add.text(100, 100, `health: ${this.player.health}`, { font: "50px Times New Roman", fill: "#ffffff"});
 
     // camera
     this.cameras.main.setBounds(
