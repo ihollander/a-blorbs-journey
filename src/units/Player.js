@@ -24,7 +24,7 @@ export default class Player {
     this.bullets = [];
     //tracking the sprite's health here
     this.alive = true
-    // should we start the health at half? or full? 
+    // should we start the health at half? or full?
     this.health = 50
     this.maxHealth = 100
 
@@ -116,7 +116,7 @@ export default class Player {
     //this gets called when the sprite has no more health
     this.alive = false;
     this.sprite.visible = false;
-
+    // not sure what else we want to do when a game ends
   }
 
   heal(amount){
@@ -128,7 +128,7 @@ export default class Player {
       if(this.health > this.maxHealth){
         this.health = this.maxHealth
       }
-    return this
+    return this.health
     }
   }
 
@@ -141,7 +141,8 @@ export default class Player {
       if(this.health <= 0)
         this.kill()
       }
+      return this.health 
     }
-    return this
+
   }
 }
