@@ -95,7 +95,7 @@ export default class MainGame extends Phaser.Scene {
       this.powerups,
       (player, powerup) => {
         this.player.health += 10;
-        // whealthbar.scaleX(this.player.health / 350)
+        // healthbar.scaleX(this.player.health / 350)
         // this.healthbar.setText(`health: ${this.player.health}`);
         powerup.destroy();
         console.log("healthbar", healthbar);
