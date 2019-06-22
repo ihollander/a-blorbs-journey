@@ -2,6 +2,7 @@ import Phaser from "phaser";
 
 import Player from "../units/Player";
 import Blorb from "../units/Blorb";
+import Enemy from "../units/Enemy";
 
 import {
   PLAYER1_IMAGE,
@@ -75,24 +76,6 @@ export default class MainGame extends Phaser.Scene {
 
     // powerups temp
     this.powerups = this.physics.add.staticGroup();
-    // random gen
-    for (let i = 1; i <= 40; i++) {
-      const x = Phaser.Math.Between(0, this.background.width);
-      const y = Phaser.Math.Between(0, this.background.height);
-
-      this.powerups.create(x, y, "bomb").setScale(2);
-    }
-    // check overlap
-    this.physics.add.overlap(
-      this.player.sprite,
-      this.powerups,
-      (player, powerup) => {
-        this.player.health += 10;
-        this.healthbar.setText(`health: ${this.player.health}`);
-        powerup.destroy();
-        console.log("Health: ", this.player.health);
-      }
-    );
 
     // camera
     this.cameras.main.setBounds(
@@ -103,7 +86,9 @@ export default class MainGame extends Phaser.Scene {
     );
     this.cameras.main.startFollow(this.player.sprite, true, 0.5, 0.5);
 
-    this.enemiesGroup = this.add.group();
+    this.enemiesGroup = this.physics.add.group({
+      classType: Enemy
+    });
 
     this.maxEnemies = 10;
     // this.enemies = [];
@@ -111,16 +96,15 @@ export default class MainGame extends Phaser.Scene {
     this.time.addEvent({
       delay: 1000,
       callback: function() {
+        const enemiesArray = Array.from(this.enemiesGroup.getChildren());
         // Set all blorbs to random vector
-        Array.from(this.enemiesGroup.getChildren()).forEach(function(blorb) {
+        enemiesArray.forEach(function(blorb) {
           blorb.body.velocity.y = Phaser.Math.Between(-100, 100);
           blorb.body.velocity.x = Phaser.Math.Between(-100, 100);
         });
 
         // New blorb if not too many blorbs
-        if (
-          Array.from(this.enemiesGroup.getChildren()).length <= this.maxEnemies
-        ) {
+        if (enemiesArray.length <= this.maxEnemies) {
           var enemy = new Blorb(
             this,
             Phaser.Math.Between(10, this.background.width),
@@ -128,40 +112,63 @@ export default class MainGame extends Phaser.Scene {
           );
           // Add blorb to group
           this.enemiesGroup.add(enemy);
+          // this.enemiesGroup.create()
         }
       }, // End callback for adding enemies
-
       callbackScope: this,
       loop: true
     });
 
+    // check collisions
     this.physics.add.collider(
       this.player.bulletGroup,
       this.enemiesGroup,
-      function(bullet, enemy) {
-        if (enemy) {
-          enemy.destroy();
-          bullet.destroy();
-        }
-      }
+      this.handleBulletEnemyCollider.bind(this)
     );
 
 
     this.physics.add.collider(
       this.player.sprite,
       this.enemiesGroup,
-      (player, enemy) => {
-        if (enemy) {
-          enemy.destroy();
-          this.player.health -= 10;
-          this.healthbar.setText(`health: ${this.player.health}`);
-          // console.log("player", player, 'health', this.player.health);
-        }
-      }
+      this.handlePlayerEnemyCollider.bind(this)
+    );
+
+    // check overlaps
+    this.physics.add.overlap(
+      this.player.sprite,
+      this.powerups,
+      this.handlePlayerPowerupOverlap.bind(this)
     );
   }
 
   update() {
     this.player.update();
+  }
+
+  handlePlayerPowerupOverlap(player, powerup) {
+    this.player.health += 10;
+    this.healthbar.setText(`health: ${this.player.health}`);
+    powerup.destroy();
+  }
+
+  handlePlayerEnemyCollider(player, enemy) {
+    if (enemy) {
+      enemy.destroy();
+      this.player.health -= 10;
+      this.healthbar.setText(`health: ${this.player.health}`);
+    }
+  }
+
+  handleBulletEnemyCollider(bullet, enemy) {
+    if (enemy) {
+      console.log(enemy);
+
+      const chance = Math.random();
+      if (chance < 0.3) {
+        this.powerups.create(enemy.body.x, enemy.body.y, "bomb").setScale(2);
+      }
+      enemy.destroy();
+      bullet.destroy();
+    }
   }
 }
