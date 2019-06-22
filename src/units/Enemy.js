@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 
+import { DNA_IMAGE } from "../consts/images";
+
 export default class Enemy extends Phaser.GameObjects.Sprite {
   constructor(scene, x, y, key, type) {
     super(scene, x, y, key);
@@ -20,11 +22,22 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
       this.health -= x;
 
       if (this.health <= 0) {
-        this.destroy();
+        this.killMe();
       } else {
         this.suffer();
       }
     }
+  }
+
+  killMe() {
+    // debugger;
+    const chance = Math.random();
+    if (chance < 0.3) {
+      this.scene.powerups
+        .create(this.body.x, this.body.y, DNA_IMAGE)
+        .setScale(2);
+    }
+    this.destroy();
   }
 
   setInitialVelocity(x) {

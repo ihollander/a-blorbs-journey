@@ -10,5 +10,8 @@ export const PLAYER5_IMAGE = "PLAYER5_IMAGE";
 
 export const EYEBALL_IMAGE = "EYEBALL_IMAGE";
 
+// powerups
+export const DNA_IMAGE = "DNA_IMAGE";
+
 // backgrounds
 export const BACKGROUND_IMAGE = "BACKGROUND_IMAGE";

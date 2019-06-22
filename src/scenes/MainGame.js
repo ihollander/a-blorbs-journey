@@ -14,6 +14,7 @@ import {
   PLAYER4_IMAGE,
   PLAYER5_IMAGE,
   EYEBALL_IMAGE,
+  DNA_IMAGE,
   BACKGROUND_IMAGE,
   TOOTH_IMAGE
 } from "../consts/images";
@@ -28,7 +29,7 @@ import player4 from "../assets/player-4.png";
 import player5 from "../assets/player-5.png";
 import tooth from "../assets/tooth.png";
 import bg from "../assets/space.png";
-import bomb from "../assets/bomb.png";
+import dna from "../assets/dna.png";
 import eyeball from "../assets/eyeball.png";
 
 // sounds
@@ -47,7 +48,7 @@ export default class MainGame extends Phaser.Scene {
     this.load.image(PLAYER5_IMAGE, player5);
     this.load.image(TOOTH_IMAGE, tooth);
     this.load.image(BACKGROUND_IMAGE, bg);
-    this.load.image("bomb", bomb);
+    this.load.image(DNA_IMAGE, dna);
     this.load.audio(THUM2_SOUND, thum2);
     this.load.image(EYEBALL_IMAGE, eyeball);
   }
@@ -89,14 +90,6 @@ export default class MainGame extends Phaser.Scene {
     // powerups temp
     this.powerups = this.physics.add.staticGroup();
 
-    // random gen
-    for (let i = 1; i <= 40; i++) {
-      const x = Phaser.Math.Between(0, this.background.width);
-      const y = Phaser.Math.Between(0, this.background.height);
-
-      this.powerups.create(x, y, "bomb").setScale(2);
-    }
-
     // camera
     this.cameras.main.setBounds(
       0,
@@ -129,12 +122,7 @@ export default class MainGame extends Phaser.Scene {
     this.physics.add.collider(
       this.player.bulletGroup,
       this.enemiesGroup,
-      (bullet, enemy) => {
-        if (enemy) {
-          enemy.damage(1);
-          bullet.destroy();
-        }
-      }
+      this.handleBulletEnemyCollider.bind(this)
     );
 
     this.physics.add.collider(
@@ -207,7 +195,6 @@ export default class MainGame extends Phaser.Scene {
 
   handlePlayerPowerupOverlap(player, powerup) {
     this.player.health += 10;
-    this.healthbar.setText(`health: ${this.player.health}`);
     powerup.destroy();
   }
 
@@ -220,13 +207,7 @@ export default class MainGame extends Phaser.Scene {
 
   handleBulletEnemyCollider(bullet, enemy) {
     if (enemy) {
-      console.log(enemy);
-
-      const chance = Math.random();
-      if (chance < 0.3) {
-        this.powerups.create(enemy.body.x, enemy.body.y, "bomb").setScale(2);
-      }
-      enemy.destroy();
+      enemy.damage(1);
       bullet.destroy();
     }
   }
