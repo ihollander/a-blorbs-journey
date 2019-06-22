@@ -31,10 +31,10 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
 
   killMe() {
     const chance = Math.random();
-    if (chance < 0.3) {
+    if (chance < 0.9) {
       this.scene.powerups
         .create(this.body.x, this.body.y, DNA_IMAGE)
-        .setScale(2);
+        .setScale(0.2);
     }
     this.destroy();
   }

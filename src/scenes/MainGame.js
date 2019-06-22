@@ -215,6 +215,7 @@ export default class MainGame extends Phaser.Scene {
     if (enemy) {
       enemy.damage(1);
       this.player.damage(10);
+      // TODO: This damage should depend on the type of enemy
     }
   }
 
