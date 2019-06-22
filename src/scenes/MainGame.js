@@ -28,7 +28,7 @@ import player3 from "../assets/player-3.png";
 import player4 from "../assets/player-4.png";
 import player5 from "../assets/player-5.png";
 import tooth from "../assets/tooth.png";
-import bg from "../assets/space.png";
+import bg from "../assets/background.png";
 import dna from "../assets/dna.png";
 import eyeball from "../assets/eyeball.png";
 
