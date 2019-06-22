@@ -11,4 +11,8 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.setData("isDead", false);
     this.body.setCollideWorldBounds(true);
   }
+
+  logger() {
+    console.log("hi");
+  }
 }
