@@ -1,0 +1,3 @@
+export const PLAYER_IMAGE = "PLAYER_IMAGE";
+
+export const BACKGROUND_IMAGE = "BACKGROUND_IMAGE";
