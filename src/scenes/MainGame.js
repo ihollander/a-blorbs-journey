@@ -8,6 +8,7 @@ import {
   PLAYER2_IMAGE,
   PLAYER3_IMAGE,
   PLAYER4_IMAGE,
+  PLAYER5_IMAGE,
   BACKGROUND_IMAGE,
   TOOTH_IMAGE
 } from "../consts/images";
@@ -16,6 +17,7 @@ import player1 from "../assets/player-1.png";
 import player2 from "../assets/player-2.png";
 import player3 from "../assets/player-3.png";
 import player4 from "../assets/player-4.png";
+import player5 from "../assets/player-5.png";
 import tooth from "../assets/tooth.png";
 import bg from "../assets/space.png";
 import bomb from "../assets/bomb.png";
@@ -30,6 +32,7 @@ export default class MainGame extends Phaser.Scene {
     this.load.image(PLAYER2_IMAGE, player2);
     this.load.image(PLAYER3_IMAGE, player3);
     this.load.image(PLAYER4_IMAGE, player4);
+    this.load.image(PLAYER5_IMAGE, player5);
     this.load.image(TOOTH_IMAGE, tooth);
     this.load.image(BACKGROUND_IMAGE, bg);
     this.load.image("bomb", bomb);
