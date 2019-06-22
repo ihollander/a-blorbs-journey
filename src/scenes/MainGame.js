@@ -181,7 +181,6 @@ export default class MainGame extends Phaser.Scene {
   }
 
   spawnEyeballs(spawnNum, x, y) {
-    console.log(`Spawning ${spawnNum} eyeballs!`);
     for (let i = 0; i < spawnNum; i++) {
       const eyeball = new Eyeball(this, x, y);
       this.enemiesGroup.add(eyeball);

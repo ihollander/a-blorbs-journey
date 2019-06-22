@@ -14,7 +14,6 @@ export default class EyeballCluster extends Enemy {
   }
 
   damage(x) {
-    console.log(`EyeballCluster: ${x} health, x: ${this.x}, y: ${this.y}`);
     if (this.suffering === false) {
       this.health -= x;
 
