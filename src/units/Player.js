@@ -1,6 +1,6 @@
 import Bullet from "../weapons/Bullet";
 
-import { PLAYER_IMAGE, TOOTH_IMAGE } from "../consts/images";
+import { PLAYER_IMAGE } from "../consts/images";
 
 export default class Player {
   constructor(scene, x, y) {
@@ -35,40 +35,88 @@ export default class Player {
       down: scene.input.keyboard.addKey(S),
       right: scene.input.keyboard.addKey(D)
     };
+
+    // gamepad
   }
 
   update(time, delta) {
     const { cursors, wasds, sprite } = this;
 
+    let pad;
+    if (this.scene.input.gamepad.total) {
+      pad = this.scene.input.gamepad.getPad(0) || this.scene.input.gamepad.pad1;
+    }
+
+    // keyboard movement
     // vertical
-    if (wasds.up.isDown) {
+    if (
+      wasds.up.isDown ||
+      (pad &&
+        pad.axes[1].value < -pad.axes[1].threshold &&
+        pad.axes[1].value < -0.5)
+    ) {
       sprite.body.setAccelerationY(-300);
-    } else if (wasds.down.isDown) {
+    } else if (
+      wasds.down.isDown ||
+      (pad &&
+        pad.axes[1].value > pad.axes[1].threshold &&
+        pad.axes[1].value > 0.5)
+    ) {
       sprite.body.setAccelerationY(300);
     } else {
       sprite.body.setAccelerationY(0);
     }
 
     // horizontal
-    if (wasds.left.isDown) {
+    if (
+      wasds.left.isDown ||
+      (pad &&
+        pad.axes[0].value < -pad.axes[0].threshold &&
+        pad.axes[0].value < -0.5)
+    ) {
       sprite.body.setAccelerationX(-300);
-    } else if (wasds.right.isDown) {
+    } else if (
+      wasds.right.isDown ||
+      (pad &&
+        pad.axes[0].value > pad.axes[0].threshold &&
+        pad.axes[0].value > -0.5)
+    ) {
       sprite.body.setAccelerationX(300);
     } else {
       sprite.body.setAccelerationX(0);
     }
 
     // rotation & firing
-    if (cursors.up.isDown) {
+    if (
+      cursors.up.isDown ||
+      (pad &&
+        pad.axes[4].value < -pad.axes[4].threshold &&
+        pad.axes[4].value < -0.5)
+    ) {
       sprite.setAngle(this.angleOffset + 180);
       this.fire();
-    } else if (cursors.right.isDown) {
+    } else if (
+      cursors.right.isDown ||
+      (pad &&
+        pad.axes[3].value > pad.axes[3].threshold &&
+        pad.axes[3].value > 0.5)
+    ) {
       sprite.setAngle(this.angleOffset + 270);
       this.fire();
-    } else if (cursors.down.isDown) {
+    } else if (
+      cursors.down.isDown ||
+      (pad &&
+        pad.axes[4].value > pad.axes[4].threshold &&
+        pad.axes[4].value > 0.5)
+    ) {
       sprite.setAngle(this.angleOffset);
       this.fire();
-    } else if (cursors.left.isDown) {
+    } else if (
+      cursors.left.isDown ||
+      (pad &&
+        pad.axes[3].value < -pad.axes[3].threshold &&
+        pad.axes[3].value < -0.5)
+    ) {
       sprite.setAngle(this.angleOffset + 90);
       this.fire();
     }

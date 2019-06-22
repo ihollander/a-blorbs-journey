@@ -12,6 +12,9 @@ var config = {
       debug: false
     }
   },
+  input: {
+    gamepad: true
+  },
   scene: [MainGame]
 };
 
