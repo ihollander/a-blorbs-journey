@@ -31,7 +31,7 @@ export default class MainGame extends Phaser.Scene {
     );
 
 
-    this.add.text(330, 200, `health`, { font: "50px Times New Roman", fill: "#ffffff"});
+    this.add.text(100, 100, `health`, { font: "50px Times New Roman", fill: "#ffffff"});
 
     this.player = new Player(
       this,
