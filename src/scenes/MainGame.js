@@ -149,12 +149,6 @@ export default class MainGame extends Phaser.Scene {
     );
   }
 
-  // spawnEyeball() {
-  //   this.enemiesGroup.add (
-  //     new Eyeball
-  //   )
-  // }
-
   update() {
     this.player.update();
   }
