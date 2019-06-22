@@ -106,11 +106,11 @@ export default class MainGame extends Phaser.Scene {
       classType: Enemy
     });
 
-    this.maxEnemies = 10;
+    this.maxEnemies = 30;
     // this.enemies = [];
 
     this.time.addEvent({
-      delay: 1000,
+      delay: 700,
       callback: function() {
         this.danceBlorbs(this.currentEnemies());
         this.spawnEnemies(this.currentEnemies());
