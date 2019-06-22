@@ -13,7 +13,7 @@ export default class Player {
       .sprite(x, y, PLAYER_IMAGE, 0)
       .setAngle(this.angleOffset)
       .setCollideWorldBounds(true)
-      .setScale(0.15, 0.15)
+      .setScale(0.25, 0.25)
       .setDrag(300)
       .setAngularDrag(400)
       .setMaxVelocity(600);
@@ -88,25 +88,29 @@ export default class Player {
 
     // rotation & firing
     if (
-      cursors.up.isDown && cursors.right.isDown
+      cursors.up.isDown &&
+      cursors.right.isDown
       // pad stuff
     ) {
       sprite.setAngle(this.angleOffset + 225);
       this.fire();
     } else if (
-      cursors.down.isDown && cursors.right.isDown
+      cursors.down.isDown &&
+      cursors.right.isDown
       // pad stuff
     ) {
       sprite.setAngle(this.angleOffset + 315);
       this.fire();
     } else if (
-      cursors.down.isDown && cursors.left.isDown
+      cursors.down.isDown &&
+      cursors.left.isDown
       // pad stuff
     ) {
       sprite.setAngle(this.angleOffset + 45);
       this.fire();
     } else if (
-      cursors.up.isDown && cursors.left.isDown
+      cursors.up.isDown &&
+      cursors.left.isDown
       // pad stuff
     ) {
       sprite.setAngle(this.angleOffset + 135);
