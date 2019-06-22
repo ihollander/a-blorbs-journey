@@ -23,15 +23,27 @@ export default class MainGame extends Phaser.Scene {
     // background
     this.background = this.add.image(0, 0, BACKGROUND_IMAGE).setOrigin(0, 0);
 
+    this.physics.world.setBounds(
+      0,
+      0,
+      this.background.width,
+      this.background.height
+    );
+
     this.player = new Player(
       this,
-      this.game.canvas.width / 2,
-      this.game.canvas.height / 2
+      this.background.width / 2,
+      this.background.height / 2
     );
 
     // camera
-    // this.cameras.main.setBounds(0, 0, 2000, 2000);
-    // this.cameras.main.startFollow(this.player, true, 0.5, 0.5);
+    this.cameras.main.setBounds(
+      0,
+      0,
+      this.background.width,
+      this.background.height
+    );
+    this.cameras.main.startFollow(this.player.sprite, true, 0.5, 0.5);
   }
 
   update() {
