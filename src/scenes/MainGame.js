@@ -1,9 +1,10 @@
 import Phaser from "phaser";
 
 import Player from "../units/Player";
+import Enemy from "../units/Enemy";
 import Blorb from "../units/Blorb";
 import EyeballCluster from "../units/EyeballCluster";
-import Enemy from "../units/Enemy";
+import Eyeball from "../units/Eyeball";
 
 import {
   PLAYER1_IMAGE,
@@ -160,18 +161,21 @@ export default class MainGame extends Phaser.Scene {
   }
 
   spawnEyeballCluster() {
-    this.enemiesGroup.add(
-      new EyeballCluster(
-        this,
-        Phaser.Math.Between(10, this.background.width),
-        Phaser.Math.Between(10, this.background.height)
-      )
+    const eyeballCluster = new EyeballCluster(
+      this,
+      Phaser.Math.Between(10, this.background.width),
+      Phaser.Math.Between(10, this.background.height)
     );
+    this.enemiesGroup.add(eyeballCluster);
+    eyeballCluster.setInitialVelocity(50);
   }
 
   spawnEyeballs(spawnNum, x, y) {
+    console.log(`Spawning ${spawnNum} eyeballs!`);
     for (let i = 0; i < spawnNum; i++) {
-      this.enemiesGroup.add(new Eyeball(this, x, y));
+      const eyeball = new Eyeball(this, x, y);
+      this.enemiesGroup.add(eyeball);
+      eyeball.setInitialVelocity(400);
     }
   }
 

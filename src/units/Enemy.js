@@ -27,6 +27,11 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     }
   }
 
+  setInitialVelocity(x) {
+    this.body.velocity.x = Phaser.Math.Between(-x, x);
+    this.body.velocity.y = Phaser.Math.Between(-x, x);
+  }
+
   suffer() {
     this.suffering = true;
     this.setTintFill(0xffffff);

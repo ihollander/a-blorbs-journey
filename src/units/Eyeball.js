@@ -4,8 +4,8 @@ import Enemy from "./Enemy";
 
 export default class EyeballCluster extends Enemy {
   constructor(scene, x, y) {
-    super(scene, x, y, EYEBALL_IMAGE, "EyeballCluster");
+    super(scene, x, y, EYEBALL_IMAGE, "Eyeball");
 
-    this.setScale(0.1, 0.1);
+    this.setScale(0.25, 0.25);
   }
 }
