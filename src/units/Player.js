@@ -20,7 +20,7 @@ export default class Player {
       .setMaxVelocity(600);
 
     // create group for bullets
-    this.bulletGroup = this.scene.physics.add.group();
+    this.bulletGroup = this.scene.physics.add.group({});
     this.bullets = [];
 
     this.bulletInterval = 0;

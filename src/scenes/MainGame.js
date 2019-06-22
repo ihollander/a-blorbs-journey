@@ -88,21 +88,22 @@ export default class MainGame extends Phaser.Scene {
       delay: 1000,
       callback: function() {
         // Set all blorbs to random vector
-        console.log(this.enemiesGroup.getChildren());
         Array.from(this.enemiesGroup.getChildren).forEach(function(blorb) {
           blorb.body.velocity.y = Phaser.Math.Between(-100, 100);
           blorb.body.velocity.x = Phaser.Math.Between(-100, 100);
         });
 
         // New blorb if not too many blorbs
-        if (this.enemies.length <= this.maxEnemies) {
+        if (
+          Array.from(this.enemiesGroup.getChildren).length <= this.maxEnemies
+        ) {
           var enemy = new Blorb(
             this,
             Phaser.Math.Between(10, this.background.width),
             Phaser.Math.Between(10, this.background.height)
           );
           // Add blorb to group
-          this.enemiesGroup.add(blorb);
+          this.enemiesGroup.add(enemy);
         }
       }, // End callback for adding enemies
 
