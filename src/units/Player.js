@@ -1,4 +1,5 @@
 import Bullet from "../weapons/Bullet";
+import Controller from "../utils/Controller";
 
 import { PLAYER_IMAGE } from "../consts/images";
 
@@ -24,23 +25,13 @@ export default class Player {
 
     this.weaponTimer = 0;
 
-    // Track the arrow keys for movement
-    this.cursors = this.scene.input.keyboard.createCursorKeys();
-
-    // Track the WASD keys for firing direction
-    const { W, A, S, D } = Phaser.Input.Keyboard.KeyCodes;
-    this.wasds = {
-      up: scene.input.keyboard.addKey(W),
-      left: scene.input.keyboard.addKey(A),
-      down: scene.input.keyboard.addKey(S),
-      right: scene.input.keyboard.addKey(D)
-    };
-
-    // gamepad
+    // control class
+    this.controller = new Controller(this.scene);
   }
 
   update(time, delta) {
-    const { cursors, wasds, sprite } = this;
+    const { controller, sprite } = this;
+    controller.update();
 
     let pad;
     if (this.scene.input.gamepad.total) {
@@ -49,102 +40,46 @@ export default class Player {
 
     // keyboard movement
     // vertical
-    if (
-      wasds.up.isDown ||
-      (pad &&
-        pad.axes[1].value < -pad.axes[1].threshold &&
-        pad.axes[1].value < -0.5)
-    ) {
+    if (controller.moveUp) {
       sprite.body.setAccelerationY(-300);
-    } else if (
-      wasds.down.isDown ||
-      (pad &&
-        pad.axes[1].value > pad.axes[1].threshold &&
-        pad.axes[1].value > 0.5)
-    ) {
+    } else if (controller.moveDown) {
       sprite.body.setAccelerationY(300);
     } else {
       sprite.body.setAccelerationY(0);
     }
 
     // horizontal
-    if (
-      wasds.left.isDown ||
-      (pad &&
-        pad.axes[0].value < -pad.axes[0].threshold &&
-        pad.axes[0].value < -0.5)
-    ) {
+    if (controller.moveLeft) {
       sprite.body.setAccelerationX(-300);
-    } else if (
-      wasds.right.isDown ||
-      (pad &&
-        pad.axes[0].value > pad.axes[0].threshold &&
-        pad.axes[0].value > -0.5)
-    ) {
+    } else if (controller.moveRight) {
       sprite.body.setAccelerationX(300);
     } else {
       sprite.body.setAccelerationX(0);
     }
 
     // rotation & firing
-    if (
-      cursors.up.isDown &&
-      cursors.right.isDown
-      // pad stuff
-    ) {
+    if (controller.shootUp && controller.shootRight) {
       sprite.setAngle(this.angleOffset + 225);
       this.fire();
-    } else if (
-      cursors.down.isDown &&
-      cursors.right.isDown
-      // pad stuff
-    ) {
+    } else if (controller.shootDown && controller.shootRight) {
       sprite.setAngle(this.angleOffset + 315);
       this.fire();
-    } else if (
-      cursors.down.isDown &&
-      cursors.left.isDown
-      // pad stuff
-    ) {
+    } else if (controller.shootDown && controller.shootLeft) {
       sprite.setAngle(this.angleOffset + 45);
       this.fire();
-    } else if (
-      cursors.up.isDown &&
-      cursors.left.isDown
-      // pad stuff
-    ) {
+    } else if (controller.shootUp && controller.shootLeft) {
       sprite.setAngle(this.angleOffset + 135);
       this.fire();
-    } else if (
-      cursors.up.isDown ||
-      (pad &&
-        pad.axes[4].value < -pad.axes[4].threshold &&
-        pad.axes[4].value < -0.5)
-    ) {
+    } else if (controller.shootUp) {
       sprite.setAngle(this.angleOffset + 180);
       this.fire();
-    } else if (
-      cursors.right.isDown ||
-      (pad &&
-        pad.axes[3].value > pad.axes[3].threshold &&
-        pad.axes[3].value > 0.5)
-    ) {
+    } else if (controller.shootRight) {
       sprite.setAngle(this.angleOffset + 270);
       this.fire();
-    } else if (
-      cursors.down.isDown ||
-      (pad &&
-        pad.axes[4].value > pad.axes[4].threshold &&
-        pad.axes[4].value > 0.5)
-    ) {
+    } else if (controller.shootDown) {
       sprite.setAngle(this.angleOffset);
       this.fire();
-    } else if (
-      cursors.left.isDown ||
-      (pad &&
-        pad.axes[3].value < -pad.axes[3].threshold &&
-        pad.axes[3].value < -0.5)
-    ) {
+    } else if (controller.shootLeft) {
       sprite.setAngle(this.angleOffset + 90);
       this.fire();
     }
