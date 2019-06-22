@@ -30,7 +30,6 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
   }
 
   killMe() {
-    // debugger;
     const chance = Math.random();
     if (chance < 0.3) {
       this.scene.powerups
@@ -52,9 +51,5 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
       this.clearTint();
       this.suffering = false;
     }, 200);
-  }
-
-  logger() {
-    console.log("hi");
   }
 }

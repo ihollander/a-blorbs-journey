@@ -214,7 +214,7 @@ export default class MainGame extends Phaser.Scene {
 
   handlePlayerEnemyCollider(player, enemy) {
     if (enemy) {
-      enemy.destroy();
+      enemy.damage(1);
       this.player.health -= 10;
     }
   }
