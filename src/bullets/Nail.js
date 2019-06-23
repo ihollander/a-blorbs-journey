@@ -7,14 +7,14 @@ export default class Nail extends Ammo {
   constructor(scene, x, y) {
     x += Phaser.Math.Between(-15, 15);
     y += Phaser.Math.Between(-15, 15);
-    super(scene, x, y);
-
-    this.setTexture(NAIL_IMAGE);
+    super(scene, x, y, NAIL_IMAGE);
 
     this.speed = 800;
 
     // default damage
-    this.damage = 1.5;
+    this.damage = 15;
+
+    this.lifespan = 50;
   }
 
   init(angle, scale) {

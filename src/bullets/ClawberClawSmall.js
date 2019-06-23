@@ -11,13 +11,12 @@ export default class ClawberClaw extends Ammo {
   constructor(scene, x, y, rotation, isLarge) {
     x += Phaser.Math.Between(-15, 15);
     y += Phaser.Math.Between(-15, 15);
-    super(scene, x, y);
+    super(scene, x, y, CLAWBER_CLAW_SMALL_IMAGE);
 
-    this.speed = 500;
+    this.speed = 300;
 
     // default damage
     this.damage = 30;
-    this.setTexture(CLAWBER_CLAW_SMALL_IMAGE);
   }
 
   init(rotation, isLarge) {
@@ -26,7 +25,7 @@ export default class ClawberClaw extends Ammo {
 
     this.scene.physics.velocityFromRotation(
       this.rotation,
-      700,
+      this.speed,
       this.body.velocity
     );
 

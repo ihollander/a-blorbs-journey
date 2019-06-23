@@ -15,8 +15,10 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.body.setCollideWorldBounds(true);
     this.angle = Math.random() * 360;
 
-    this.health = 1;
+    this.health = 10;
     this.suffering = false;
+
+    this.collisionDamage = 10;
   }
 
   damage(x) {
@@ -32,6 +34,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
   }
 
   killMe() {
+    this.scene.killCount += 1;
     // debugger;
     this.scene.sound.play(EXPLODE_SOUND, {
       seek: 1.25
@@ -49,12 +52,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.destroy();
   }
 
-  update() {
-    const playerx = this.scene.player.x;
-    const playery = this.scene.player.y;
-    const thisx = this.body.x;
-    const thisy = this.body.y;
-  }
+  update() {}
 
   setInitialVelocity(x) {
     this.body.velocity.x = Phaser.Math.Between(-x, x);

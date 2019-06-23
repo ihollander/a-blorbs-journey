@@ -4,12 +4,10 @@ import { EYEBALL_IMAGE } from "../consts/images";
 
 export default class Eyeball extends Ammo {
   constructor(scene, x, y) {
-    super(scene, x, y);
-
-    this.setTexture(EYEBALL_IMAGE);
+    super(scene, x, y, EYEBALL_IMAGE);
 
     // damage
-    this.damage = 3;
+    this.damage = 30;
 
     // speed
     this.speed = 200;

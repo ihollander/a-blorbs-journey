@@ -1,8 +1,8 @@
 import { TOOTH_IMAGE } from "../consts/images";
 
 export default class Ammo extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y) {
-    super(scene, x, y, TOOTH_IMAGE);
+  constructor(scene, x, y, texture = TOOTH_IMAGE) {
+    super(scene, x, y, texture);
 
     this.scene = scene;
     this.scene.add.existing(this);
@@ -15,7 +15,7 @@ export default class Ammo extends Phaser.Physics.Arcade.Sprite {
     this.speed = 400;
 
     // default damage
-    this.damage = 1;
+    this.damage = 10;
   }
 
   update() {

@@ -4,12 +4,12 @@ import { TOOTH_IMAGE } from "../consts/images";
 
 export default class Tooth extends Ammo {
   constructor(scene, x, y) {
-    super(scene, x, y);
-
-    this.setTexture(TOOTH_IMAGE);
+    super(scene, x, y, TOOTH_IMAGE);
 
     // damage
-    this.damage = 1;
+    this.damage = 10;
+
+    this.lifespan = 50;
   }
 
   init(angle, scale) {

@@ -31,7 +31,7 @@ import {
   TOOTH_IMAGE,
   NAIL_IMAGE,
   CLAWBER_CLAW_BIG_IMAGE,
-  CLAWBER_CLAW_SMALL_IMAGE
+  CLAWBER_CLAW_SMALL_IMAGE,
   GAMEOVER_IMAGE
 } from "../consts/images";
 
@@ -153,7 +153,16 @@ export default class MainGame extends Phaser.Scene {
       .setAlpha(0.95)
       .setScale(0.75)
       .setVisible(false);
-    // .saetScrollFactor(0);
+
+    this.highScore = this.add
+      .text(0, 0, "", {
+        font: "50px Times New Roman",
+        fill: "#ffffff"
+      })
+      .setAlign("center")
+      .setDepth(1000)
+      .setVisible(false);
+
     this.gameOver = false;
 
     // enemies
@@ -165,6 +174,7 @@ export default class MainGame extends Phaser.Scene {
       classType: Ammo
     });
 
+    this.killCount = 0;
     this.maxEnemies = 30;
 
     this.time.addEvent({
@@ -250,7 +260,7 @@ export default class MainGame extends Phaser.Scene {
         Phaser.Math.Between(playerBounds.bottom + 200, this.background.height)
       ]);
       const dice = Math.random();
-      if (dice > 0.1) {
+      if (dice > 0.95) {
         this.spawnChaserSmall();
       } else if (dice > 0.85) {
         this.spawnChaserLarge();
@@ -340,8 +350,8 @@ export default class MainGame extends Phaser.Scene {
 
   handlePlayerEnemyCollider(player, enemy) {
     if (enemy) {
-      enemy.damage(1);
-      this.player.health -= 50;
+      // enemy.damage(1);
+      this.player.health -= enemy.collisionDamage;
     }
   }
 

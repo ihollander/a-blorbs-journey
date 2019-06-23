@@ -9,6 +9,8 @@ export default class EyeballCluster extends Enemy {
     this.setScale(0.5, 0.5);
 
     Math.random() > 0.5 ? (this.spin = "l") : (this.spin = "r");
+
+    this.collisionDamage = 30;
   }
 
   update() {

@@ -14,9 +14,11 @@ export default class Chaser extends Enemy {
 
     this.setScale(0.4, 0.4);
 
-    this.health = 2;
+    this.health = 20;
 
     this.claws = 2;
+
+    this.collisionDamage = 10;
   }
 
   update() {

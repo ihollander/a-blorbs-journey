@@ -49,9 +49,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.currentWeapon = this.weapons.tooth;
 
     // healthbar
-    this._health = 200;
+    this._health = 50;
     this.maxHealth = 5000;
     this.suffering = false;
+
+    this.highScore = this._health;
   }
 
   update(time, delta) {
@@ -186,6 +188,15 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.cameras.main.worldView.centerY
       )
       .setVisible(true);
+    this.scene.highScore
+      .setPosition(
+        this.scene.cameras.main.worldView.centerX - 180,
+        this.scene.cameras.main.worldView.centerY + 200
+      )
+      .setText(
+        `High Score: ${this.highScore}\nKill Count: ${this.scene.killCount}`
+      )
+      .setVisible(true);
     this.destroy();
   }
 
@@ -196,6 +207,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   set health(amount) {
+    // check high score
+    if (this._health > this.highScore) {
+      this.highScore = this._health;
+    }
+
     const prevHealth = this._health;
     // can't take additional damage while suffering
     if (prevHealth > amount && !this.suffering) {

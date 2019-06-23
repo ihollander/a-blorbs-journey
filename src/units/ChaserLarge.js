@@ -9,12 +9,14 @@ export default class ChaserLarge extends Enemy {
 
     this.setScale(1, 1);
 
-    this.health = 10;
+    this.health = 100;
     this.sound = this.scene.sound.add(WEOW_SOUND, {
       loop: true,
       volume: 0
     });
     this.sound.play();
+
+    this.collisionDamage = 150;
   }
 
   update() {

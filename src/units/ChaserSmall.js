@@ -9,12 +9,14 @@ export default class Chaser extends Enemy {
 
     this.setScale(0.4, 0.4);
 
-    this.health = 2;
+    this.health = 20;
     this.sound = this.scene.sound.add(PEPEPEP_SOUND, {
       loop: true,
       volume: 0
     });
     this.sound.play();
+
+    this.collisionDamage = 50;
   }
 
   update() {
