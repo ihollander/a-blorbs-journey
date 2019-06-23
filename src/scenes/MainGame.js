@@ -6,7 +6,8 @@ import Blorb from "../units/Blorb";
 
 import EyeballCluster from "../units/EyeballCluster";
 import Eyeball from "../units/Eyeball";
-import Chaser from "../units/Chaser";
+import ChaserSmall from "../units/ChaserSmall";
+import ChaserLarge from "../units/ChaserLarge";
 
 import {
   PLAYER1_IMAGE,
@@ -59,7 +60,7 @@ export default class MainGame extends Phaser.Scene {
     this.load.image(DNA_IMAGE, dna);
     this.load.image(EYEBALL_IMAGE, eyeball);
     this.load.image(EYEBALL_CLUSTER_IMAGE, eyeballCluster);
-    this.load.image(CHASER_IMAGE, eyeball);
+    this.load.image(CHASER_IMAGE, chaser);
 
     // audio
     this.load.audio(THUM2_SOUND, thum2);
@@ -166,13 +167,15 @@ export default class MainGame extends Phaser.Scene {
     if (currentEnemies.length <= this.maxEnemies) {
       let spawnX = Phaser.Math.Between(10, this.background.width);
       let spawnY = Phaser.Math.Between(10, this.background.height);
-
-      if (true) {
-        this.spawnChaser();
-      } else if (Math.random > 0.2) {
-        this.spawnBlorb(spawnX, spawnY);
-      } else {
+      const dice = Math.random();
+      if (dice > 0.95) {
+        this.spawnChaserSmall();
+      } else if (dice > 0.85) {
+        this.spawnChaserLarge();
+      } else if (Math.random() > 0.6) {
         this.spawnEyeballCluster(spawnX, spawnY);
+      } else {
+        this.spawnBlorb(spawnX, spawnY);
       }
     }
   }
@@ -200,10 +203,30 @@ export default class MainGame extends Phaser.Scene {
     }
   }
 
-  spawnChaser() {
-    const chaser = new Chaser(this, 100, 100);
+  spawnChaserSmall() {
+    const spawnX =
+      this.player.sprite.x > this.background.width / 2
+        ? 0
+        : this.background.width;
+    const spawnY =
+      this.player.sprite.y > this.background.height / 2
+        ? 0
+        : this.background.height;
+    const chaser = new ChaserSmall(this, spawnX, spawnY);
     this.enemiesGroup.add(chaser);
-    chaser.setInitialVelocity(300);
+  }
+
+  spawnChaserLarge() {
+    const spawnX =
+      this.player.sprite.x > this.background.width / 2
+        ? 0
+        : this.background.width;
+    const spawnY =
+      this.player.sprite.y > this.background.height / 2
+        ? 0
+        : this.background.height;
+    const chaser = new ChaserLarge(this, spawnX, spawnY);
+    this.enemiesGroup.add(chaser);
   }
 
   cleanupEnemies(currentEnemies) {
