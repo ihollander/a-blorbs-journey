@@ -10,6 +10,8 @@ export default class EyeballCluster extends Enemy {
     this.body.maxVelocity.x = 50;
     this.body.maxVelocity.y = 50;
 
+    Math.random > 0.5 ? (this.spin = "l") : (this.spin = "r");
+
     this.health = 3;
   }
 
@@ -30,5 +32,9 @@ export default class EyeballCluster extends Enemy {
         this.suffer();
       }
     }
+  }
+
+  update() {
+    this.spin === "l" ? (this.angle += 0.5) : (this.angle -= 0.5);
   }
 }

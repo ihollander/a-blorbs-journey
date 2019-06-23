@@ -7,5 +7,11 @@ export default class EyeballCluster extends Enemy {
     super(scene, x, y, EYEBALL_IMAGE, "Eyeball");
 
     this.setScale(0.5, 0.5);
+
+    Math.random() > 0.5 ? (this.spin = "l") : (this.spin = "r");
+  }
+
+  update() {
+    this.spin === "l" ? (this.angle += 10) : (this.angle -= 10);
   }
 }
