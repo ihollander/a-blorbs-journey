@@ -1,21 +1,22 @@
 import Ammo from "./Ammo";
 
-import { TOOTH_IMAGE } from "../consts/images";
-import { THUM2_SOUND } from "../consts/sounds";
+import { NAIL_IMAGE } from "../consts/images";
+import { SPIT1_SOUND } from "../consts/sounds";
 
-export default class Tooth extends Ammo {
+export default class Nail extends Ammo {
   constructor(scene, x, y) {
     super(scene, x, y);
 
-    this.setTexture(TOOTH_IMAGE);
+    this.setTexture(NAIL_IMAGE);
 
-    // damage
-    this.damage = 1;
+    this.speed = 800;
+
+    // default damage
+    this.damage = 0.5;
   }
 
   init(angle, scale) {
     // set movement physics
-    this.setAngularVelocity(500);
     this.setScale(scale);
     this.setAngle(angle);
 
@@ -29,7 +30,7 @@ export default class Tooth extends Ammo {
     this.body.velocity.y *= 2;
 
     // play launch sound
-    this.scene.sound.play(THUM2_SOUND, {
+    this.scene.sound.play(SPIT1_SOUND, {
       seek: 0.15
     });
   }

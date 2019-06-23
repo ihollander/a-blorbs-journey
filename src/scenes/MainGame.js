@@ -18,10 +18,16 @@ import {
   EYEBALL_CLUSTER_IMAGE,
   DNA_IMAGE,
   BACKGROUND_IMAGE,
-  TOOTH_IMAGE
+  TOOTH_IMAGE,
+  NAIL_IMAGE
 } from "../consts/images";
 
-import { THUM2_SOUND, KACHING_SOUND, EXPLODE_SOUND } from "../consts/sounds";
+import {
+  SPIT1_SOUND,
+  THUM2_SOUND,
+  KACHING_SOUND,
+  EXPLODE_SOUND
+} from "../consts/sounds";
 
 // image assets
 import player1 from "../assets/player-1.png";
@@ -30,6 +36,7 @@ import player3 from "../assets/player-3.png";
 import player4 from "../assets/player-4.png";
 import player5 from "../assets/player-5.png";
 import tooth from "../assets/tooth.png";
+import nail from "../assets/clawber-claw-small.png";
 import bg from "../assets/background.png";
 import dna from "../assets/dna.png";
 import eyeball from "../assets/eyeball.png";
@@ -39,6 +46,7 @@ import eyeballCluster from "../assets/eyeball-cluster.png";
 import explode from "../assets/sounds/explode.mp3";
 import kaching from "../assets/sounds/kaching.mp3";
 import thum2 from "../assets/sounds/thum2.mp3";
+import spit1 from "../assets/sounds/spit1.mp3";
 
 export default class MainGame extends Phaser.Scene {
   constructor() {
@@ -53,11 +61,13 @@ export default class MainGame extends Phaser.Scene {
     this.load.image(PLAYER4_IMAGE, player4);
     this.load.image(PLAYER5_IMAGE, player5);
     this.load.image(TOOTH_IMAGE, tooth);
+    this.load.image(NAIL_IMAGE, nail);
     this.load.image(BACKGROUND_IMAGE, bg);
     this.load.image(DNA_IMAGE, dna);
     this.load.image(EYEBALL_IMAGE, eyeball);
 
     // audio
+    this.load.audio(SPIT1_SOUND, spit1);
     this.load.audio(THUM2_SOUND, thum2);
     this.load.audio(EXPLODE_SOUND, explode);
     this.load.audio(KACHING_SOUND, kaching);
@@ -82,11 +92,11 @@ export default class MainGame extends Phaser.Scene {
       this.background.height / 2
     );
 
-    //  this.healthbar = this.add.text(20, 20, `health: ${this.player.health}`, {
-    //   font: "50px Times New Roman",
-    //   fill: "#ffffff"
-    // });
-    // this.healthbar.setScrollFactor(0, 0);
+    this.healthbar = this.add.text(20, 20, `health: ${this.player.health}`, {
+      font: "50px Times New Roman",
+      fill: "#ffffff"
+    });
+    this.healthbar.setScrollFactor(0, 0);
 
     // const testbar = new Phaser.Geom.Rectangle(25, 25, 300, 40);
     // let graphics = this.add.graphics({ fillStyle: { color: 0x0000ff } });
@@ -133,18 +143,18 @@ export default class MainGame extends Phaser.Scene {
 
     // check collisions
     this.physics.add.collider(
-      this.bulletGroup,
-      this.enemiesGroup,
-      this.handleBulletEnemyCollider.bind(this)
-    );
-
-    this.physics.add.collider(
       this.player,
       this.enemiesGroup,
       this.handlePlayerEnemyCollider.bind(this)
     );
 
     // check overlaps
+    this.physics.add.overlap(
+      this.bulletGroup,
+      this.enemiesGroup,
+      this.handleBulletEnemyCollider.bind(this)
+    );
+
     this.physics.add.overlap(
       this.player,
       this.powerups,
@@ -220,9 +230,7 @@ export default class MainGame extends Phaser.Scene {
   }
 
   handlePlayerPowerupOverlap(player, powerup) {
-    console.log(player);
-
-    this.player.heal(10);
+    this.player.health += 10;
     this.sound.play(KACHING_SOUND, {
       seek: 0.15
     });
@@ -232,14 +240,13 @@ export default class MainGame extends Phaser.Scene {
   handlePlayerEnemyCollider(player, enemy) {
     if (enemy) {
       enemy.damage(1);
-      this.player.damage(50);
-      // TODO: This damage should depend on the type of enemy
+      this.player.health -= 50;
     }
   }
 
   handleBulletEnemyCollider(bullet, enemy) {
     if (enemy) {
-      enemy.damage(1);
+      enemy.damage(bullet.damage);
       bullet.destroy();
     }
   }
