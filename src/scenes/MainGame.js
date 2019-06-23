@@ -128,7 +128,8 @@ export default class MainGame extends Phaser.Scene {
     });
 
     this.maxEnemies = 30;
-    // this.enemies = [];
+
+    this.rnd = new Phaser.Math.RandomDataGenerator();
 
     this.time.addEvent({
       delay: 700,
@@ -180,17 +181,13 @@ export default class MainGame extends Phaser.Scene {
 
   // Choose which enemies to spawn and spawn them
   spawnEnemies(currentEnemies) {
+    const playerBounds = this.player.getBounds();
     if (currentEnemies.length <= this.maxEnemies) {
-      const playerBounds = this.player.getBounds();
-      console.log(playerBounds);
-
-      const rnd = new Phaser.Math.RandomDataGenerator();
-
-      const spawnX = rnd.pick([
+      const spawnX = this.rnd.pick([
         Phaser.Math.Between(10, playerBounds.left - 200),
         Phaser.Math.Between(playerBounds.right + 200, this.background.width)
       ]);
-      const spawnY = rnd.pick([
+      const spawnY = this.rnd.pick([
         Phaser.Math.Between(10, playerBounds.top - 200),
         Phaser.Math.Between(playerBounds.bottom + 200, this.background.height)
       ]);
