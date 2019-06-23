@@ -3,6 +3,7 @@ import Phaser from "phaser";
 import Player from "../units/Player";
 import Enemy from "../units/Enemy";
 import Blorb from "../units/Blorb";
+import Ammo from "../weapons/Ammo";
 
 import EyeballCluster from "../units/EyeballCluster";
 import Eyeball from "../units/Eyeball";
@@ -100,8 +101,7 @@ export default class MainGame extends Phaser.Scene {
 
     // bullets
     this.bulletGroup = this.physics.add.group({
-      defaultKey: "bullets",
-      maxSize: 20
+      classType: Ammo
     });
 
     // camera
@@ -152,6 +152,13 @@ export default class MainGame extends Phaser.Scene {
     );
   }
 
+  update() {
+    this.player.update();
+    this.currentEnemies().forEach(enemy => enemy.update());
+    this.currentBullets().forEach(bullet => bullet.update());
+  }
+
+  /*** Helper fns ***/
   // Set all blorbs to random vector
   danceBlorbs(currentEnemies) {
     currentEnemies
@@ -212,11 +219,6 @@ export default class MainGame extends Phaser.Scene {
     });
   }
 
-  update() {
-    this.player.update();
-    this.currentEnemies().forEach(enemy => enemy.update());
-  }
-
   handlePlayerPowerupOverlap(player, powerup) {
     console.log(player);
 
@@ -235,14 +237,18 @@ export default class MainGame extends Phaser.Scene {
     }
   }
 
-  currentEnemies() {
-    return Array.from(this.enemiesGroup.getChildren());
-  }
-
   handleBulletEnemyCollider(bullet, enemy) {
     if (enemy) {
       enemy.damage(1);
       bullet.destroy();
     }
+  }
+
+  currentEnemies() {
+    return Array.from(this.enemiesGroup.getChildren());
+  }
+
+  currentBullets() {
+    return Array.from(this.bulletGroup.getChildren());
   }
 }

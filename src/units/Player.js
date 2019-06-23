@@ -1,4 +1,5 @@
 import Tooth from "../weapons/Tooth";
+import Ammo from "../weapons/Ammo";
 
 import Controller from "../utils/Controller";
 
@@ -9,8 +10,6 @@ import {
   PLAYER4_IMAGE,
   PLAYER5_IMAGE
 } from "../consts/images";
-
-import { THUM2_SOUND } from "../consts/sounds";
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y) {
@@ -36,7 +35,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.setMaxVelocity(600);
 
     // bullets
-    this.bullets = [];
+    // this.bullets = [];
     this.bulletInterval = 0;
 
     // healthbar
@@ -60,10 +59,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.updateRotation();
 
     // update/cleanup bullets
-    this.bullets = this.bullets.filter(bullet => {
-      bullet.update(); // call update
-      return bullet.active; // filter out not active
-    });
+    // this.bullets = this.bullets.filter(bullet => {
+    //   bullet.update(); // call update
+    //   return bullet.active; // filter out not active
+    // });
   }
 
   updateMovement() {
@@ -156,18 +155,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.bulletInterval--;
     if (this.bulletInterval <= 0) {
       this.bulletInterval = 20;
-      const bullet = new Tooth({
-        group: this.scene.bulletGroup,
-        scene: this.scene,
-        x: this.x,
-        y: this.y,
-        angle: this.body.rotation + 70
-      });
-      this.scene.sound.play(THUM2_SOUND, {
-        seek: 0.15
-      });
-      this.bullets.push(bullet);
-      bullet.sprite.scale = this.scale;
+      const bullet = new Ammo(this.scene, this.x, this.y);
+      this.scene.bulletGroup.add(bullet);
+      // can't set physics on the bullet until it's been added to the group
+      // moved physics logic to init function
+      bullet.init(this.body.rotation + 70, this.scale);
     }
   }
 
