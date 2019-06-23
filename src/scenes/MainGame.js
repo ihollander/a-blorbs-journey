@@ -14,6 +14,7 @@ import {
   PLAYER4_IMAGE,
   PLAYER5_IMAGE,
   EYEBALL_IMAGE,
+  EYEBALL_CLUSTER_IMAGE,
   DNA_IMAGE,
   BACKGROUND_IMAGE,
   TOOTH_IMAGE
@@ -31,6 +32,7 @@ import tooth from "../assets/tooth.png";
 import bg from "../assets/background.png";
 import dna from "../assets/dna.png";
 import eyeball from "../assets/eyeball.png";
+import eyeballCluster from "../assets/eyeball-cluster.png";
 
 // sounds
 import explode from "../assets/sounds/explode.mp3";
@@ -58,6 +60,7 @@ export default class MainGame extends Phaser.Scene {
     this.load.audio(THUM2_SOUND, thum2);
     this.load.audio(EXPLODE_SOUND, explode);
     this.load.audio(KACHING_SOUND, kaching);
+    this.load.image(EYEBALL_CLUSTER_IMAGE, eyeballCluster);
   }
 
   create() {
@@ -84,11 +87,11 @@ export default class MainGame extends Phaser.Scene {
     // });
     // this.healthbar.setScrollFactor(0, 0);
 
-    const testbar = new Phaser.Geom.Rectangle(25, 25, 300, 40);
-    let graphics = this.add.graphics({ fillStyle: { color: 0x0000ff } });
-    graphics.fillRectShape(testbar);
+    // const testbar = new Phaser.Geom.Rectangle(25, 25, 300, 40);
+    // let graphics = this.add.graphics({ fillStyle: { color: 0x0000ff } });
+    // graphics.fillRectShape(testbar);
 
-    graphics.setScrollFactor(0, 0);
+    // graphics.setScrollFactor(0, 0);
     // this.healthbar.setScrollFactor(0, 0);
 
     /*** PHYSICS GROUPS ***/
@@ -114,11 +117,11 @@ export default class MainGame extends Phaser.Scene {
       classType: Enemy
     });
 
-    this.maxEnemies = 10;
+    this.maxEnemies = 30;
     // this.enemies = [];
 
     this.time.addEvent({
-      delay: 1000,
+      delay: 700,
       callback: function() {
         this.danceBlorbs(this.currentEnemies());
         this.spawnEnemies(this.currentEnemies());
@@ -161,23 +164,20 @@ export default class MainGame extends Phaser.Scene {
   // Choose which enemies to spawn and spawn them
   spawnEnemies(currentEnemies) {
     if (currentEnemies.length <= this.maxEnemies) {
+      let spawnX = Phaser.Math.Between(10, this.background.width);
+      let spawnY = Phaser.Math.Between(10, this.background.height);
+
       if (Math.random() > 0.5) {
-        this.spawnBlorb();
+        this.spawnBlorb(spawnX, spawnY);
       } else {
-        this.spawnEyeballCluster();
+        this.spawnEyeballCluster(spawnX, spawnY);
       }
     }
   }
 
   // Spawn a blorb
-  spawnBlorb() {
-    this.enemiesGroup.add(
-      new Blorb(
-        this,
-        Phaser.Math.Between(10, this.background.width),
-        Phaser.Math.Between(10, this.background.height)
-      )
-    );
+  spawnBlorb(x, y) {
+    this.enemiesGroup.add(new Blorb(this, x, y));
   }
 
   spawnEyeballCluster() {
@@ -230,7 +230,7 @@ export default class MainGame extends Phaser.Scene {
   handlePlayerEnemyCollider(player, enemy) {
     if (enemy) {
       enemy.damage(1);
-      this.player.damage(10);
+      this.player.damage(50);
       // TODO: This damage should depend on the type of enemy
     }
   }

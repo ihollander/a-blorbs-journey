@@ -37,7 +37,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
       seek: 0.35
     });
     const chance = Math.random();
-    // if (chance < 0.9) {
+    if (chance < 0.9) {
     this.scene.powerups
       .create(this.body.x, this.body.y, DNA_IMAGE)
       .setScale(0.2, 0.2)
@@ -46,7 +46,12 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.destroy();
   }
 
-  update() {}
+  update() {
+    const playerx = this.scene.player.sprite.x;
+    const playery = this.scene.player.sprite.y;
+    const thisx = this.body.x;
+    const thisy = this.body.y;
+  }
 
   setInitialVelocity(x) {
     this.body.velocity.x = Phaser.Math.Between(-x, x);
