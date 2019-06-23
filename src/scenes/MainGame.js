@@ -81,9 +81,6 @@ export default class MainGame extends Phaser.Scene {
       this.background.height / 2
     );
 
-    // initiating with health maybe
-    this.player.health = 250;
-
     //  this.healthbar = this.add.text(20, 20, `health: ${this.player.health}`, {
     //   font: "50px Times New Roman",
     //   fill: "#ffffff"
@@ -97,8 +94,15 @@ export default class MainGame extends Phaser.Scene {
     // graphics.setScrollFactor(0, 0);
     // this.healthbar.setScrollFactor(0, 0);
 
-    // powerups temp
+    /*** PHYSICS GROUPS ***/
+    // powerups
     this.powerups = this.physics.add.staticGroup();
+
+    // bullets
+    this.bulletGroup = this.scene.physics.add.group({
+      defaultKey: "bullets",
+      maxSize: 20
+    });
 
     // camera
     this.cameras.main.setBounds(
@@ -107,7 +111,7 @@ export default class MainGame extends Phaser.Scene {
       this.background.width,
       this.background.height
     );
-    this.cameras.main.startFollow(this.player.sprite, true, 0.5, 0.5);
+    this.cameras.main.startFollow(this.player, true, 0.5, 0.5);
 
     this.enemiesGroup = this.physics.add.group({
       classType: Enemy
@@ -135,14 +139,14 @@ export default class MainGame extends Phaser.Scene {
     );
 
     this.physics.add.collider(
-      this.player.sprite,
+      this.player,
       this.enemiesGroup,
       this.handlePlayerEnemyCollider.bind(this)
     );
 
     // check overlaps
     this.physics.add.overlap(
-      this.player.sprite,
+      this.player,
       this.powerups,
       this.handlePlayerPowerupOverlap.bind(this)
     );
@@ -216,7 +220,7 @@ export default class MainGame extends Phaser.Scene {
   handlePlayerPowerupOverlap(player, powerup) {
     console.log(player);
 
-    this.player.health += 10;
+    this.player.heal(10);
     this.sound.play(KACHING_SOUND, {
       seek: 0.15
     });

@@ -12,27 +12,30 @@ import {
 
 import { THUM2_SOUND } from "../consts/sounds";
 
-export default class Player {
+export default class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y) {
+    super(scene, x, y, PLAYER1_IMAGE);
+
     this.scene = scene;
+
+    // since we're not using a physics factory function to create
+    // these will let the scene know about this object
+    this.scene.add.existing(this);
+    this.scene.physics.add.existing(this);
 
     // create physics-based sprite
     // angle offset for slightly tilty sprite
     this.angleOffset = 18;
-    this.sprite = scene.physics.add
-      .sprite(x, y, PLAYER1_IMAGE, 0)
-      .setAngle(this.angleOffset)
-      .setCollideWorldBounds(true)
-      .setScale(0.25, 0.25)
-      .setDrag(300)
-      .setAngularDrag(400)
-      .setMaxVelocity(600);
+    // this.scene.physics.world.enable(this); // give access 2 physics
 
-    // create group for bullets
-    this.bulletGroup = this.scene.physics.add.group({
-      defaultKey: "bullets",
-      maxSize: 20
-    });
+    this.setAngle(this.angleOffset);
+    this.setCollideWorldBounds(true);
+    this.setScale(0.25, 0.25);
+    this.setDrag(300);
+    this.setAngularDrag(400);
+    this.setMaxVelocity(600);
+
+    // bullets
     this.bullets = [];
     this.bulletInterval = 0;
 
@@ -45,10 +48,75 @@ export default class Player {
   }
 
   update(time, delta) {
-    const { controller, sprite } = this;
-    controller.update();
+    const { controller } = this;
+    controller.update(); // update to get the gamepad info
 
     // transformations based on health
+    this.updateTransform();
+
+    // movement
+    this.updateMovement();
+    // rotation & firing
+    this.updateRotation();
+
+    // update/cleanup bullets
+    this.bullets = this.bullets.filter(bullet => {
+      bullet.update(); // call update
+      return bullet.active; // filter out not active
+    });
+  }
+
+  updateMovement() {
+    const { controller, body } = this;
+    // vertical movement
+    if (controller.moveUp) {
+      body.setAccelerationY(-300);
+    } else if (controller.moveDown) {
+      body.setAccelerationY(300);
+    } else {
+      body.setAccelerationY(0);
+    }
+
+    // horizontal movement
+    if (controller.moveLeft) {
+      body.setAccelerationX(-300);
+    } else if (controller.moveRight) {
+      body.setAccelerationX(300);
+    } else {
+      body.setAccelerationX(0);
+    }
+  }
+
+  updateRotation() {
+    const { controller, angleOffset } = this;
+    if (controller.shootUp && controller.shootRight) {
+      this.setAngle(angleOffset + 225);
+      this.fire();
+    } else if (controller.shootDown && controller.shootRight) {
+      this.setAngle(angleOffset + 315);
+      this.fire();
+    } else if (controller.shootDown && controller.shootLeft) {
+      this.setAngle(angleOffset + 45);
+      this.fire();
+    } else if (controller.shootUp && controller.shootLeft) {
+      this.setAngle(angleOffset + 135);
+      this.fire();
+    } else if (controller.shootUp) {
+      this.setAngle(angleOffset + 180);
+      this.fire();
+    } else if (controller.shootRight) {
+      this.setAngle(angleOffset + 270);
+      this.fire();
+    } else if (controller.shootDown) {
+      this.setAngle(angleOffset);
+      this.fire();
+    } else if (controller.shootLeft) {
+      this.setAngle(angleOffset + 90);
+      this.fire();
+    }
+  }
+
+  updateTransform() {
     if (this.sprite.texture.key !== PLAYER1_IMAGE && this.health < 150) {
       this.sprite.setTexture(PLAYER1_IMAGE);
       this.sprite.setScale(0.25, 0.25);
@@ -84,57 +152,6 @@ export default class Player {
       const newScale = 0.35 + (this.health - 300) * 0.0005;
       this.sprite.setScale(newScale, newScale);
     }
-
-    // vertical movement
-    if (controller.moveUp) {
-      sprite.body.setAccelerationY(-300);
-    } else if (controller.moveDown) {
-      sprite.body.setAccelerationY(300);
-    } else {
-      sprite.body.setAccelerationY(0);
-    }
-
-    // horizontal movement
-    if (controller.moveLeft) {
-      sprite.body.setAccelerationX(-300);
-    } else if (controller.moveRight) {
-      sprite.body.setAccelerationX(300);
-    } else {
-      sprite.body.setAccelerationX(0);
-    }
-
-    // rotation & firing
-    if (controller.shootUp && controller.shootRight) {
-      sprite.setAngle(this.angleOffset + 225);
-      this.fire();
-    } else if (controller.shootDown && controller.shootRight) {
-      sprite.setAngle(this.angleOffset + 315);
-      this.fire();
-    } else if (controller.shootDown && controller.shootLeft) {
-      sprite.setAngle(this.angleOffset + 45);
-      this.fire();
-    } else if (controller.shootUp && controller.shootLeft) {
-      sprite.setAngle(this.angleOffset + 135);
-      this.fire();
-    } else if (controller.shootUp) {
-      sprite.setAngle(this.angleOffset + 180);
-      this.fire();
-    } else if (controller.shootRight) {
-      sprite.setAngle(this.angleOffset + 270);
-      this.fire();
-    } else if (controller.shootDown) {
-      sprite.setAngle(this.angleOffset);
-      this.fire();
-    } else if (controller.shootLeft) {
-      sprite.setAngle(this.angleOffset + 90);
-      this.fire();
-    }
-
-    // update/cleanup bullets
-    this.bullets = this.bullets.filter(bullet => {
-      bullet.update(); // call update
-      return bullet.active; // filter out not active
-    });
   }
 
   fire() {
@@ -143,11 +160,11 @@ export default class Player {
     if (this.bulletInterval <= 0) {
       this.bulletInterval = 20;
       const bullet = new Tooth({
-        group: this.bulletGroup,
+        group: this.scene.bulletGroup,
         scene: this.scene,
-        x: this.sprite.x,
-        y: this.sprite.y,
-        angle: this.sprite.body.rotation + 70
+        x: this.x,
+        y: this.y,
+        angle: this.body.rotation + 70
       });
       this.scene.sound.play(THUM2_SOUND, {
         seek: 0.15
@@ -160,7 +177,7 @@ export default class Player {
   kill() {
     //this gets called when the sprite has no more health
     this.alive = false;
-    this.sprite.visible = false;
+    this.visible = false;
     // not sure what else we want to do when a game ends
   }
 
@@ -192,9 +209,9 @@ export default class Player {
   suffer() {
     this.suffering = true;
     // debugger;
-    this.sprite.setTintFill(0xffffff);
+    this.setTintFill(0xffffff);
     setTimeout(() => {
-      this.sprite.clearTint();
+      this.clearTint();
       this.suffering = false;
     }, 200);
   }

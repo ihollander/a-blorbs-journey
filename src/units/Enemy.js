@@ -37,11 +37,12 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
       seek: 0.35
     });
     const chance = Math.random();
-    if (chance < 1) {
-      this.scene.powerups
-        .create(this.body.x, this.body.y, DNA_IMAGE)
-        .setScale(0.2);
-    }
+    if (chance < 0.9) {
+    this.scene.powerups
+      .create(this.body.x, this.body.y, DNA_IMAGE)
+      .setScale(0.2, 0.2)
+      .refreshBody(); // must call after setScale to resize
+    // }
     this.destroy();
   }
 
