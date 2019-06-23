@@ -43,6 +43,9 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
         .setScale(0.2, 0.2)
         .refreshBody(); // must call after setScale to resize
     }
+    if (this.sound) {
+      this.sound.stop();
+    }
     this.destroy();
   }
 

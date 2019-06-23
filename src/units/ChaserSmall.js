@@ -1,4 +1,5 @@
 import { CHASER_IMAGE } from "../consts/images";
+import { PEPEPEP_SOUND } from "../consts/sounds";
 
 import Enemy from "./Enemy";
 
@@ -9,9 +10,24 @@ export default class Chaser extends Enemy {
     this.setScale(0.4, 0.4);
 
     this.health = 2;
+    this.sound = this.scene.sound.add(PEPEPEP_SOUND, {
+      loop: true,
+      volume: 0
+    });
+    this.sound.play();
   }
 
   update() {
+    const distance = Phaser.Math.Distance.Between(
+      this.x,
+      this.y,
+      this.scene.player.x,
+      this.scene.player.y
+    );
+    if (distance < 1000) {
+      this.sound.setVolume((1000 - distance) / 600);
+    }
+
     const angle = Phaser.Math.Angle.Between(
       this.x,
       this.y,

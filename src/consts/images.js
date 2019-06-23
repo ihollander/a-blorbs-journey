@@ -28,3 +28,5 @@ export const DNA_IMAGE = "DNA_IMAGE";
 
 // backgrounds
 export const BACKGROUND_IMAGE = "BACKGROUND_IMAGE";
+export const TITLESCREEN_IMAGE = "TITLESCREEN_IMAGE";
+export const GAMEOVER_IMAGE = "GAMEOVER_IMAGE";

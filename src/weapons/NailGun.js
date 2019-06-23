@@ -1,5 +1,5 @@
 import Nail from "../bullets/Nail";
-import { SPIT1_SOUND } from "../consts/sounds";
+import { SPIT2_SOUND } from "../consts/sounds";
 
 export default class NailGun {
   constructor(scene) {
@@ -13,12 +13,16 @@ export default class NailGun {
 
     this.nextFire = this.scene.time.now + this.interval;
 
-    const bullet = new Nail(this.scene, x, y);
-    this.scene.bulletGroup.add(bullet);
-    bullet.init(rotation, scale);
+    for (let i = -1; i <= 1; i += 2) {
+      const offsetX = i * 10;
+      const offsetY = i * 10;
+      const bullet = new Nail(this.scene, x + offsetX, y + offsetY);
+      this.scene.bulletGroup.add(bullet);
+      bullet.init(rotation, scale);
+    }
 
     // play launch sound
-    this.scene.sound.play(SPIT1_SOUND, {
+    this.scene.sound.play(SPIT2_SOUND, {
       seek: 0.65
     });
   }

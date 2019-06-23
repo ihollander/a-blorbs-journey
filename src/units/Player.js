@@ -5,8 +5,6 @@ import SpreadNailGun from "../weapons/SpreadNailGun";
 import ToothAndNailGun from "../weapons/ToothAndNailGun";
 import ToothNailEyeballGun from "../weapons/ToothNailEyeballGun";
 
-import Controller from "../utils/Controller";
-
 import {
   PLAYER1_IMAGE,
   PLAYER2_IMAGE,
@@ -51,17 +49,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.currentWeapon = this.weapons.tooth;
 
     // healthbar
-    this._health = 350;
+    this._health = 200;
     this.maxHealth = 5000;
     this.suffering = false;
-
-    // controllers
-    this.controller = new Controller(this.scene);
   }
 
   update(time, delta) {
-    const { controller } = this;
-    controller.update(); // update to get the gamepad info
+    const { controller } = this.scene;
 
     // transformations based on health
     this.updateTransform();
@@ -74,7 +68,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   updateMovement() {
-    const { controller, body } = this;
+    const {
+      scene: { controller },
+      body
+    } = this;
     // vertical movement
     if (controller.moveUp) {
       body.setAccelerationY(-300);
@@ -95,7 +92,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   updateRotation() {
-    const { controller, angleOffset } = this;
+    const {
+      scene: { controller },
+      angleOffset
+    } = this;
     if (controller.shootUp && controller.shootRight) {
       this.setAngle(angleOffset + 225);
       this.fire();
@@ -177,9 +177,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   kill() {
     //this gets called when the sprite has no more health
-    this.alive = false;
-    this.visible = false;
-    // not sure what else we want to do when a game ends
+    // debugger;
+    this.scene.cameras.main.shake(500, 0.025);
+    this.scene.gameOver = true;
+    this.scene.gameOverCard
+      .setPosition(
+        this.scene.cameras.main.worldView.centerX,
+        this.scene.cameras.main.worldView.centerY
+      )
+      .setVisible(true);
+    this.destroy();
   }
 
   // getter and setter for health
@@ -208,7 +215,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       this.kill();
     }
 
-    this.scene.healthbar.setText(`Health: ${this._health}`);
     return this._health;
   }
 
