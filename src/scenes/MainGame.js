@@ -234,26 +234,18 @@ export default class MainGame extends Phaser.Scene {
 
   spawnChaserSmall() {
     const spawnX =
-      this.player.sprite.x > this.background.width / 2
-        ? 0
-        : this.background.width;
+      this.player.x > this.background.width / 2 ? 0 : this.background.width;
     const spawnY =
-      this.player.sprite.y > this.background.height / 2
-        ? 0
-        : this.background.height;
+      this.player.y > this.background.height / 2 ? 0 : this.background.height;
     const chaser = new ChaserSmall(this, spawnX, spawnY);
     this.enemiesGroup.add(chaser);
   }
 
   spawnChaserLarge() {
     const spawnX =
-      this.player.sprite.x > this.background.width / 2
-        ? 0
-        : this.background.width;
+      this.player.x > this.background.width / 2 ? 0 : this.background.width;
     const spawnY =
-      this.player.sprite.y > this.background.height / 2
-        ? 0
-        : this.background.height;
+      this.player.y > this.background.height / 2 ? 0 : this.background.height;
     const chaser = new ChaserLarge(this, spawnX, spawnY);
     this.enemiesGroup.add(chaser);
   }

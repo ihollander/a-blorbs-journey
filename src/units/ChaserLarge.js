@@ -15,8 +15,8 @@ export default class ChaserLarge extends Enemy {
     const angle = Phaser.Math.Angle.Between(
       this.x,
       this.y,
-      this.scene.player.sprite.x,
-      this.scene.player.sprite.y
+      this.scene.player.x,
+      this.scene.player.y
     );
     this.setAngle((angle * 180) / Math.PI);
 
