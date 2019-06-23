@@ -97,11 +97,11 @@ export default class MainGame extends Phaser.Scene {
       this.background.height / 2
     );
 
-    this.healthbar = this.add.text(20, 20, `health: ${this.player.health}`, {
-      font: "50px Times New Roman",
-      fill: "#ffffff"
-    });
-    this.healthbar.setScrollFactor(0, 0);
+    // this.healthbar = this.add.text(20, 20, `health: ${this.player.health}`, {
+    //   font: "50px Times New Roman",
+    //   fill: "#ffffff"
+    // });
+    // this.healthbar.setScrollFactor(0, 0);
 
     // const testbar = new Phaser.Geom.Rectangle(25, 25, 300, 40);
     // let graphics = this.add.graphics({ fillStyle: { color: 0x0000ff } });
