@@ -15,6 +15,7 @@ import {
   PLAYER5_IMAGE,
   EYEBALL_IMAGE,
   EYEBALL_CLUSTER_IMAGE,
+  CHASER_IMAGE,
   DNA_IMAGE,
   BACKGROUND_IMAGE,
   TOOTH_IMAGE
@@ -33,6 +34,7 @@ import bg from "../assets/background.png";
 import dna from "../assets/dna.png";
 import eyeball from "../assets/eyeball.png";
 import eyeballCluster from "../assets/eyeball-cluster.png";
+import chaser from "../assets/chaser.png";
 
 // sounds
 import explode from "../assets/sounds/explode.mp3";
@@ -55,12 +57,13 @@ export default class MainGame extends Phaser.Scene {
     this.load.image(BACKGROUND_IMAGE, bg);
     this.load.image(DNA_IMAGE, dna);
     this.load.image(EYEBALL_IMAGE, eyeball);
+    this.load.image(EYEBALL_CLUSTER_IMAGE, eyeballCluster);
+    this.load.image(CHASER_IMAGE, eyeball);
 
     // audio
     this.load.audio(THUM2_SOUND, thum2);
     this.load.audio(EXPLODE_SOUND, explode);
     this.load.audio(KACHING_SOUND, kaching);
-    this.load.image(EYEBALL_CLUSTER_IMAGE, eyeballCluster);
   }
 
   create() {
@@ -163,7 +166,9 @@ export default class MainGame extends Phaser.Scene {
       let spawnX = Phaser.Math.Between(10, this.background.width);
       let spawnY = Phaser.Math.Between(10, this.background.height);
 
-      if (Math.random() > 0.5) {
+      if (true) {
+        this.spawnChaser();
+      } else if (Math.random > 0.2) {
         this.spawnBlorb(spawnX, spawnY);
       } else {
         this.spawnEyeballCluster(spawnX, spawnY);
@@ -192,6 +197,12 @@ export default class MainGame extends Phaser.Scene {
       this.enemiesGroup.add(eyeball);
       eyeball.setInitialVelocity(400);
     }
+  }
+
+  spawnChaser() {
+    const chaser = new Chaser(this, 100, 100);
+    this.enemiesGroup.add(chaser);
+    chaser.setInitialVelocity(300);
   }
 
   cleanupEnemies(currentEnemies) {
