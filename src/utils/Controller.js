@@ -6,12 +6,17 @@ export default class Controller {
     this.cursors = scene.input.keyboard.createCursorKeys();
 
     // Track the WASD keys for firing direction
-    const { W, A, S, D } = Phaser.Input.Keyboard.KeyCodes;
+    const { W, A, S, D, X, ESC } = Phaser.Input.Keyboard.KeyCodes;
     this.wasds = {
       up: scene.input.keyboard.addKey(W),
       left: scene.input.keyboard.addKey(A),
       down: scene.input.keyboard.addKey(S),
       right: scene.input.keyboard.addKey(D)
+    };
+
+    this.extras = {
+      x: scene.input.keyboard.addKey(X),
+      esc: scene.input.keyboard.addKey(ESC)
     };
 
     this.pad = null;

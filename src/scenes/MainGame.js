@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 
+import Controller from "../utils/Controller";
+
 import Player from "../units/Player";
 import Enemy from "../units/Enemy";
 import Blorb from "../units/Blorb";
@@ -22,7 +24,8 @@ import {
   DNA_IMAGE,
   BACKGROUND_IMAGE,
   TOOTH_IMAGE,
-  NAIL_IMAGE
+  NAIL_IMAGE,
+  GAMEOVER_IMAGE
 } from "../consts/images";
 
 import {
@@ -41,6 +44,7 @@ import player5 from "../assets/player-5.png";
 import tooth from "../assets/tooth.png";
 import nail from "../assets/clawber-claw-small.png";
 import bg from "../assets/background.png";
+import gameOver from "../assets/game-over.png";
 import dna from "../assets/dna.png";
 import eyeball from "../assets/eyeball.png";
 import eyeballCluster from "../assets/eyeball-cluster.png";
@@ -67,6 +71,7 @@ export default class MainGame extends Phaser.Scene {
     this.load.image(TOOTH_IMAGE, tooth);
     this.load.image(NAIL_IMAGE, nail);
     this.load.image(BACKGROUND_IMAGE, bg);
+    this.load.image(GAMEOVER_IMAGE, gameOver);
     this.load.image(DNA_IMAGE, dna);
     this.load.image(EYEBALL_IMAGE, eyeball);
     this.load.image(EYEBALL_CLUSTER_IMAGE, eyeballCluster);
@@ -93,7 +98,7 @@ export default class MainGame extends Phaser.Scene {
     // player
     this.player = new Player(
       this,
-      this.background.width / 4, // starting position
+      this.background.width / 2,
       this.background.height / 2
     );
 
@@ -128,13 +133,22 @@ export default class MainGame extends Phaser.Scene {
     );
     this.cameras.main.startFollow(this.player, true, 0.5, 0.5);
 
+    // game over graphic
+    this.gameOverCard = this.add
+      .image(0, 0, GAMEOVER_IMAGE)
+      .setDepth(100)
+      .setAlpha(0.95)
+      .setScale(0.75)
+      .setVisible(false);
+    // .saetScrollFactor(0);
+    this.gameOver = false;
+
+    // enemies
     this.enemiesGroup = this.physics.add.group({
       classType: Enemy
     });
 
     this.maxEnemies = 30;
-
-    this.rnd = new Phaser.Math.RandomDataGenerator();
 
     this.time.addEvent({
       delay: 700,
@@ -146,6 +160,9 @@ export default class MainGame extends Phaser.Scene {
       callbackScope: this,
       loop: true
     });
+
+    // utils
+    this.rnd = new Phaser.Math.RandomDataGenerator();
 
     // check collisions
     this.physics.add.collider(
@@ -166,12 +183,26 @@ export default class MainGame extends Phaser.Scene {
       this.powerups,
       this.handlePlayerPowerupOverlap.bind(this)
     );
+
+    // controllers
+    this.controller = new Controller(this);
   }
 
   update() {
-    this.player.update();
-    this.currentEnemies().forEach(enemy => enemy.update());
-    this.currentBullets().forEach(bullet => bullet.update());
+    this.controller.update(); // update to get the gamepad info
+
+    if (!this.gameOver) {
+      this.player.update();
+      this.currentEnemies().forEach(enemy => enemy.update());
+      this.currentBullets().forEach(bullet => bullet.update());
+    } else if (this.controller.extras.x.isDown) {
+      this.scene.restart();
+    }
+
+    if (this.controller.extras.esc.isDown) {
+      this.scene.stop("MainGame");
+      this.scene.start("StartScreen");
+    }
   }
 
   /*** Helper fns ***/
