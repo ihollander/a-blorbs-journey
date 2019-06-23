@@ -99,7 +99,7 @@ export default class MainGame extends Phaser.Scene {
     this.powerups = this.physics.add.staticGroup();
 
     // bullets
-    this.bulletGroup = this.scene.physics.add.group({
+    this.bulletGroup = this.physics.add.group({
       defaultKey: "bullets",
       maxSize: 20
     });
@@ -133,7 +133,7 @@ export default class MainGame extends Phaser.Scene {
 
     // check collisions
     this.physics.add.collider(
-      this.player.bulletGroup,
+      this.bulletGroup,
       this.enemiesGroup,
       this.handleBulletEnemyCollider.bind(this)
     );

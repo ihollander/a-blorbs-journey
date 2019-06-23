@@ -117,40 +117,37 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   updateTransform() {
-    if (this.sprite.texture.key !== PLAYER1_IMAGE && this.health < 150) {
-      this.sprite.setTexture(PLAYER1_IMAGE);
-      this.sprite.setScale(0.25, 0.25);
+    if (this.texture.key !== PLAYER1_IMAGE && this.health < 150) {
+      this.setTexture(PLAYER1_IMAGE);
+      this.setScale(0.25, 0.25);
     } else if (
-      this.sprite.texture.key !== PLAYER2_IMAGE &&
+      this.texture.key !== PLAYER2_IMAGE &&
       this.health >= 150 &&
       this.health < 200
     ) {
-      this.sprite.setTexture(PLAYER2_IMAGE);
-      this.sprite.setScale(0.27, 0.27);
+      this.setTexture(PLAYER2_IMAGE);
+      this.setScale(0.27, 0.27);
     } else if (
-      this.sprite.texture.key !== PLAYER3_IMAGE &&
+      this.texture.key !== PLAYER3_IMAGE &&
       this.health >= 200 &&
       this.health < 250
     ) {
-      this.sprite.setTexture(PLAYER3_IMAGE);
-      this.sprite.setScale(0.29, 0.29);
+      this.setTexture(PLAYER3_IMAGE);
+      this.setScale(0.29, 0.29);
     } else if (
-      this.sprite.texture.key !== PLAYER4_IMAGE &&
+      this.texture.key !== PLAYER4_IMAGE &&
       this.health >= 250 &&
       this.health < 300
     ) {
-      this.sprite.setTexture(PLAYER4_IMAGE);
-      this.sprite.setScale(0.31, 0.31);
-    } else if (
-      this.sprite.texture.key !== PLAYER5_IMAGE &&
-      this.health >= 300
-    ) {
-      this.sprite.setTexture(PLAYER5_IMAGE);
-      this.sprite.setScale(0.34, 0.34);
+      this.setTexture(PLAYER4_IMAGE);
+      this.setScale(0.31, 0.31);
+    } else if (this.texture.key !== PLAYER5_IMAGE && this.health >= 300) {
+      this.setTexture(PLAYER5_IMAGE);
+      this.setScale(0.34, 0.34);
     } else if (this.health >= 350) {
       // Scales based on current health
       const newScale = 0.35 + (this.health - 300) * 0.0005;
-      this.sprite.setScale(newScale, newScale);
+      this.setScale(newScale, newScale);
     }
   }
 
@@ -170,7 +167,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         seek: 0.15
       });
       this.bullets.push(bullet);
-      bullet.sprite.scale = this.sprite.scale;
+      bullet.sprite.scale = this.scale;
     }
   }
 
