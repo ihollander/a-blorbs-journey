@@ -51,7 +51,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.currentWeapon = this.weapons.tooth;
 
     // healthbar
-    this._health = 350;
+    this._health = 50;
     this.maxHealth = 5000;
     this.suffering = false;
 
@@ -177,9 +177,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   kill() {
     //this gets called when the sprite has no more health
-    this.alive = false;
-    this.visible = false;
-    // not sure what else we want to do when a game ends
+    // debugger;
+    this.scene.gameOver = true;
+    this.scene.gameOverCard.setPosition(this.x, this.y).setVisible(true);
+    this.destroy();
   }
 
   // getter and setter for health
@@ -203,12 +204,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       if (this._health > this.maxHealth) {
         this._health = this.maxHealth;
       }
+      this.scene.healthbar.setText(`Health: ${this._health}`);
     } else {
       this._health = 0;
+      this.scene.healthbar.setText(`Health: ${this._health}`);
       this.kill();
     }
 
-    this.scene.healthbar.setText(`Health: ${this._health}`);
     return this._health;
   }
 
