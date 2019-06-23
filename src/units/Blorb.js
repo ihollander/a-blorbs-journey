@@ -5,7 +5,7 @@ import Enemy from "./Enemy";
 export default class Blorb extends Enemy {
   constructor(scene, x, y) {
     super(scene, x, y, PLAYER1_IMAGE, "Blorb");
-    this.setScale(0.15, 0.15);
+    this.setScale(0.2, 0.2);
 
     this.health = 2;
   }
