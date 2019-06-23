@@ -9,7 +9,7 @@ export default class Tooth extends Ammo {
     // damage
     this.damage = 10;
 
-    this.lifespan = 50;
+    this.lifespan = 70;
   }
 
   init(angle, scale) {

@@ -126,43 +126,48 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   updateTransform() {
-    if (this.texture.key !== PLAYER1_IMAGE && this.health < 150) {
+    if (this.texture.key !== PLAYER1_IMAGE && this.health < 100) {
       this.setTexture(PLAYER1_IMAGE);
       this.setScale(0.25, 0.25);
       this.currentWeapon = this.weapons.tooth;
     } else if (
       this.texture.key !== PLAYER2_IMAGE &&
-      this.health >= 150 &&
-      this.health < 200
+      this.health >= 100 &&
+      this.health < 170
     ) {
       this.setTexture(PLAYER2_IMAGE);
       this.setScale(0.27, 0.27);
       this.currentWeapon = this.weapons.spreadTooth;
+      this.scene.maxEnemies = 40;
     } else if (
       this.texture.key !== PLAYER3_IMAGE &&
-      this.health >= 200 &&
-      this.health < 250
+      this.health >= 170 &&
+      this.health < 270
     ) {
       this.setTexture(PLAYER3_IMAGE);
       this.setScale(0.29, 0.29);
       this.currentWeapon = this.weapons.nail;
+      this.scene.maxEnemies = 50;
     } else if (
       this.texture.key !== PLAYER4_IMAGE &&
-      this.health >= 250 &&
-      this.health < 300
+      this.health >= 270 &&
+      this.health < 400
     ) {
       this.setTexture(PLAYER4_IMAGE);
       this.setScale(0.31, 0.31);
       this.currentWeapon = this.weapons.spreadNail;
-    } else if (this.texture.key !== PLAYER5_IMAGE && this.health >= 300) {
+      this.scene.maxEnemies = 60;
+    } else if (this.texture.key !== PLAYER5_IMAGE && this.health >= 400) {
       this.setTexture(PLAYER5_IMAGE);
       this.setScale(0.34, 0.34);
       this.currentWeapon = this.weapons.toothAndNail;
-    } else if (this.health >= 350) {
+      this.scene.maxEnemies = 70;
+    } else if (this.health >= 550) {
       // Scales based on current health
       const newScale = 0.35 + (this.health - 300) * 0.0005;
       this.setScale(newScale, newScale);
       this.currentWeapon = this.weapons.toothNailEyeball;
+      this.scene.maxEnemies = 80;
     }
   }
 

@@ -12,7 +12,7 @@ export default class Nail extends Ammo {
     this.speed = 800;
 
     // default damage
-    this.damage = 15;
+    this.damage = 7;
 
     this.lifespan = 50;
   }
