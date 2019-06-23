@@ -12,6 +12,8 @@ export const PLAYER5_IMAGE = "PLAYER5_IMAGE";
 export const EYEBALL_IMAGE = "EYEBALL_IMAGE";
 export const EYEBALL_CLUSTER_IMAGE = "EYEBALL_CLUSTER_IMAGE";
 
+export const CHASER_IMAGE = "CHASER_IMAGE";
+
 // powerups
 export const DNA_IMAGE = "DNA_IMAGE";
 

@@ -7,6 +7,8 @@ import Ammo from "../bullets/Ammo";
 
 import EyeballCluster from "../units/EyeballCluster";
 import Eyeball from "../units/Eyeball";
+import ChaserSmall from "../units/ChaserSmall";
+import ChaserLarge from "../units/ChaserLarge";
 
 import {
   PLAYER1_IMAGE,
@@ -16,6 +18,7 @@ import {
   PLAYER5_IMAGE,
   EYEBALL_IMAGE,
   EYEBALL_CLUSTER_IMAGE,
+  CHASER_IMAGE,
   DNA_IMAGE,
   BACKGROUND_IMAGE,
   TOOTH_IMAGE,
@@ -41,6 +44,7 @@ import bg from "../assets/background.png";
 import dna from "../assets/dna.png";
 import eyeball from "../assets/eyeball.png";
 import eyeballCluster from "../assets/eyeball-cluster.png";
+import chaser from "../assets/chaser.png";
 
 // sounds
 import explode from "../assets/sounds/explode.mp3";
@@ -65,13 +69,14 @@ export default class MainGame extends Phaser.Scene {
     this.load.image(BACKGROUND_IMAGE, bg);
     this.load.image(DNA_IMAGE, dna);
     this.load.image(EYEBALL_IMAGE, eyeball);
+    this.load.image(EYEBALL_CLUSTER_IMAGE, eyeballCluster);
+    this.load.image(CHASER_IMAGE, chaser);
 
     // audio
     this.load.audio(SPIT1_SOUND, spit1);
     this.load.audio(THUM2_SOUND, thum2);
     this.load.audio(EXPLODE_SOUND, explode);
     this.load.audio(KACHING_SOUND, kaching);
-    this.load.image(EYEBALL_CLUSTER_IMAGE, eyeballCluster);
   }
 
   create() {
@@ -191,11 +196,15 @@ export default class MainGame extends Phaser.Scene {
         Phaser.Math.Between(10, playerBounds.top - 200),
         Phaser.Math.Between(playerBounds.bottom + 200, this.background.height)
       ]);
-
-      if (Math.random() > 0.5) {
-        this.spawnBlorb(spawnX, spawnY);
-      } else {
+      const dice = Math.random();
+      if (dice > 0.95) {
+        this.spawnChaserSmall();
+      } else if (dice > 0.85) {
+        this.spawnChaserLarge();
+      } else if (dice > 0.6) {
         this.spawnEyeballCluster(spawnX, spawnY);
+      } else {
+        this.spawnBlorb(spawnX, spawnY);
       }
     }
   }
@@ -221,6 +230,32 @@ export default class MainGame extends Phaser.Scene {
       this.enemiesGroup.add(eyeball);
       eyeball.setInitialVelocity(400);
     }
+  }
+
+  spawnChaserSmall() {
+    const spawnX =
+      this.player.sprite.x > this.background.width / 2
+        ? 0
+        : this.background.width;
+    const spawnY =
+      this.player.sprite.y > this.background.height / 2
+        ? 0
+        : this.background.height;
+    const chaser = new ChaserSmall(this, spawnX, spawnY);
+    this.enemiesGroup.add(chaser);
+  }
+
+  spawnChaserLarge() {
+    const spawnX =
+      this.player.sprite.x > this.background.width / 2
+        ? 0
+        : this.background.width;
+    const spawnY =
+      this.player.sprite.y > this.background.height / 2
+        ? 0
+        : this.background.height;
+    const chaser = new ChaserLarge(this, spawnX, spawnY);
+    this.enemiesGroup.add(chaser);
   }
 
   cleanupEnemies(currentEnemies) {
