@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 
+import Controller from "../utils/Controller";
+
 import Player from "../units/Player";
 import Enemy from "../units/Enemy";
 import Blorb from "../units/Blorb";
@@ -181,13 +183,20 @@ export default class MainGame extends Phaser.Scene {
       this.powerups,
       this.handlePlayerPowerupOverlap.bind(this)
     );
+
+    // controllers
+    this.controller = new Controller(this);
   }
 
   update() {
-    if (this.player && this.player.active) {
+    this.controller.update(); // update to get the gamepad info
+
+    if (!this.gameOver) {
       this.player.update();
       this.currentEnemies().forEach(enemy => enemy.update());
       this.currentBullets().forEach(bullet => bullet.update());
+    } else if (this.controller.extras.x.isDown) {
+      this.scene.restart();
     }
   }
 
