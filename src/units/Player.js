@@ -1,7 +1,9 @@
 import ToothGun from "../weapons/ToothGun";
+import SpreadToothGun from "../weapons/SpreadToothGun";
 import NailGun from "../weapons/NailGun";
 import SpreadNailGun from "../weapons/SpreadNailGun";
 import ToothAndNailGun from "../weapons/ToothAndNailGun";
+import ToothNailEyeballGun from "../weapons/ToothNailEyeballGun";
 
 import Controller from "../utils/Controller";
 
@@ -40,15 +42,17 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     // weapons
     this.weapons = {
       tooth: new ToothGun(this.scene),
+      spreadTooth: new SpreadToothGun(this.scene),
       nail: new NailGun(this.scene),
       spreadNail: new SpreadNailGun(this.scene),
-      toothAndNail: new ToothAndNailGun(this.scene)
+      toothAndNail: new ToothAndNailGun(this.scene),
+      toothNailEyeball: new ToothNailEyeballGun(this.scene)
     };
     this.currentWeapon = this.weapons.tooth;
 
     // healthbar
-    this._health = 250;
-    this.maxHealth = 500;
+    this._health = 350;
+    this.maxHealth = 5000;
     this.suffering = false;
 
     // controllers
@@ -131,7 +135,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     ) {
       this.setTexture(PLAYER2_IMAGE);
       this.setScale(0.27, 0.27);
-      this.currentWeapon = this.weapons.nail;
+      this.currentWeapon = this.weapons.spreadTooth;
     } else if (
       this.texture.key !== PLAYER3_IMAGE &&
       this.health >= 200 &&
@@ -139,7 +143,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     ) {
       this.setTexture(PLAYER3_IMAGE);
       this.setScale(0.29, 0.29);
-      this.currentWeapon = this.weapons.spreadNail;
+      this.currentWeapon = this.weapons.nail;
     } else if (
       this.texture.key !== PLAYER4_IMAGE &&
       this.health >= 250 &&
@@ -147,14 +151,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     ) {
       this.setTexture(PLAYER4_IMAGE);
       this.setScale(0.31, 0.31);
-      this.currentWeapon = this.weapons.toothAndNail;
+      this.currentWeapon = this.weapons.spreadNail;
     } else if (this.texture.key !== PLAYER5_IMAGE && this.health >= 300) {
       this.setTexture(PLAYER5_IMAGE);
       this.setScale(0.34, 0.34);
+      this.currentWeapon = this.weapons.toothAndNail;
     } else if (this.health >= 350) {
       // Scales based on current health
       const newScale = 0.35 + (this.health - 300) * 0.0005;
       this.setScale(newScale, newScale);
+      this.currentWeapon = this.weapons.toothNailEyeball;
     }
   }
 
