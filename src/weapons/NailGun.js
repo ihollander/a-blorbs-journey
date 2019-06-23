@@ -1,5 +1,5 @@
 import Nail from "../bullets/Nail";
-import { SPIT1_SOUND } from "../consts/sounds";
+import { SPIT2_SOUND } from "../consts/sounds";
 
 export default class NailGun {
   constructor(scene) {
@@ -22,7 +22,7 @@ export default class NailGun {
     }
 
     // play launch sound
-    this.scene.sound.play(SPIT1_SOUND, {
+    this.scene.sound.play(SPIT2_SOUND, {
       seek: 0.65
     });
   }

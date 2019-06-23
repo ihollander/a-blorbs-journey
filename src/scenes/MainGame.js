@@ -32,7 +32,10 @@ import {
   SPIT1_SOUND,
   THUM2_SOUND,
   KACHING_SOUND,
-  EXPLODE_SOUND
+  EXPLODE_SOUND,
+  SPIT2_SOUND,
+  WEOW_SOUND,
+  PEPEPEP_SOUND
 } from "../consts/sounds";
 
 // image assets
@@ -55,6 +58,9 @@ import explode from "../assets/sounds/explode.mp3";
 import kaching from "../assets/sounds/kaching.mp3";
 import thum2 from "../assets/sounds/thum2.mp3";
 import spit1 from "../assets/sounds/spit1.mp3";
+import spit2 from "../assets/sounds/spit2.mp3";
+import weow from "../assets/sounds/weowweow.mp3";
+import pepepepepepepep from "../assets/sounds/pepepepepepepep.mp3";
 
 export default class MainGame extends Phaser.Scene {
   constructor() {
@@ -79,9 +85,12 @@ export default class MainGame extends Phaser.Scene {
 
     // audio
     this.load.audio(SPIT1_SOUND, spit1);
+    this.load.audio(SPIT2_SOUND, spit2);
     this.load.audio(THUM2_SOUND, thum2);
     this.load.audio(EXPLODE_SOUND, explode);
     this.load.audio(KACHING_SOUND, kaching);
+    this.load.audio(WEOW_SOUND, weow);
+    this.load.audio(PEPEPEP_SOUND, pepepepepepepep);
   }
 
   create() {
@@ -101,19 +110,6 @@ export default class MainGame extends Phaser.Scene {
       this.background.width / 2,
       this.background.height / 2
     );
-
-    // this.healthbar = this.add.text(20, 20, `health: ${this.player.health}`, {
-    //   font: "50px Times New Roman",
-    //   fill: "#ffffff"
-    // });
-    // this.healthbar.setScrollFactor(0, 0);
-
-    // const testbar = new Phaser.Geom.Rectangle(25, 25, 300, 40);
-    // let graphics = this.add.graphics({ fillStyle: { color: 0x0000ff } });
-    // graphics.fillRectShape(testbar);
-
-    // graphics.setScrollFactor(0, 0);
-    // this.healthbar.setScrollFactor(0, 0);
 
     /*** PHYSICS GROUPS ***/
     // powerups
@@ -228,7 +224,7 @@ export default class MainGame extends Phaser.Scene {
         Phaser.Math.Between(playerBounds.bottom + 200, this.background.height)
       ]);
       const dice = Math.random();
-      if (dice > 0.95) {
+      if (dice > 0.1) {
         this.spawnChaserSmall();
       } else if (dice > 0.85) {
         this.spawnChaserLarge();
@@ -279,6 +275,8 @@ export default class MainGame extends Phaser.Scene {
       this.player.y > this.background.height / 2 ? 0 : this.background.height;
     const chaser = new ChaserLarge(this, spawnX, spawnY);
     this.enemiesGroup.add(chaser);
+    //play sound
+    // this.sound.play("weow");
   }
 
   cleanupEnemies(currentEnemies) {
