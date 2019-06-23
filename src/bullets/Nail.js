@@ -5,6 +5,8 @@ import { SPIT1_SOUND } from "../consts/sounds";
 
 export default class Nail extends Ammo {
   constructor(scene, x, y) {
+    x += Phaser.Math.Between(-15, 15);
+    y += Phaser.Math.Between(-15, 15);
     super(scene, x, y);
 
     this.setTexture(NAIL_IMAGE);
@@ -28,10 +30,5 @@ export default class Nail extends Ammo {
 
     this.body.velocity.x *= 2;
     this.body.velocity.y *= 2;
-
-    // play launch sound
-    this.scene.sound.play(SPIT1_SOUND, {
-      seek: 0.15
-    });
   }
 }

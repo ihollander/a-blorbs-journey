@@ -1,7 +1,6 @@
 import Ammo from "./Ammo";
 
 import { TOOTH_IMAGE } from "../consts/images";
-import { THUM2_SOUND } from "../consts/sounds";
 
 export default class Tooth extends Ammo {
   constructor(scene, x, y) {
@@ -27,10 +26,5 @@ export default class Tooth extends Ammo {
 
     this.body.velocity.x *= 2;
     this.body.velocity.y *= 2;
-
-    // play launch sound
-    this.scene.sound.play(THUM2_SOUND, {
-      seek: 0.15
-    });
   }
 }

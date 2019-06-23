@@ -3,7 +3,7 @@ import Phaser from "phaser";
 import Player from "../units/Player";
 import Enemy from "../units/Enemy";
 import Blorb from "../units/Blorb";
-import Ammo from "../weapons/Ammo";
+import Ammo from "../bullets/Ammo";
 
 import EyeballCluster from "../units/EyeballCluster";
 import Eyeball from "../units/Eyeball";
