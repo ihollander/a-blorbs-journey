@@ -207,7 +207,7 @@ export default class MainGame extends Phaser.Scene {
   }
 
   handlePlayerPowerupOverlap(player, powerup) {
-    this.player.health += 10;
+    this.player.health += 30;
     powerup.destroy();
   }
 

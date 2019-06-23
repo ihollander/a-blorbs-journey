@@ -37,7 +37,7 @@ export default class Player {
     this.bulletInterval = 0;
 
     // healthbar
-    this.health = 290;
+    this.health = 100;
     this.suffering = false;
 
     // controllers
@@ -51,6 +51,7 @@ export default class Player {
     // transformations based on health
     if (this.sprite.texture.key !== PLAYER1_IMAGE && this.health < 150) {
       this.sprite.setTexture(PLAYER1_IMAGE);
+      this.sprite.setScale(0.25, 0.25);
     } else if (
       this.sprite.texture.key !== PLAYER2_IMAGE &&
       this.health >= 150 &&
@@ -80,7 +81,7 @@ export default class Player {
       this.sprite.setScale(0.34, 0.34);
     } else if (this.health >= 350) {
       // Scales based on current health
-      const newScale = 0.35 + (this.health - 300) * 0.002;
+      const newScale = 0.35 + (this.health - 300) * 0.0005;
       this.sprite.setScale(newScale, newScale);
     }
 
@@ -150,6 +151,7 @@ export default class Player {
       });
       this.scene.sound.play(THUM2_SOUND);
       this.bullets.push(bullet);
+      bullet.sprite.scale = this.sprite.scale;
     }
   }
 
