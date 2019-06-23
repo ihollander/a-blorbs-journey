@@ -1,14 +1,16 @@
 import Phaser from "phaser";
 
 import Player from "../units/Player";
-import Enemy from "../units/Enemy";
-import Blorb from "../units/Blorb";
 import Ammo from "../bullets/Ammo";
 
+import Enemy from "../units/Enemy";
+import Blorb from "../units/Blorb";
 import EyeballCluster from "../units/EyeballCluster";
 import Eyeball from "../units/Eyeball";
 import ChaserSmall from "../units/ChaserSmall";
 import ChaserLarge from "../units/ChaserLarge";
+import Clawber from "../units/Clawber";
+import ClawberShot from "../weapons/ClawberShot";
 
 import {
   PLAYER1_IMAGE,
@@ -19,10 +21,15 @@ import {
   EYEBALL_IMAGE,
   EYEBALL_CLUSTER_IMAGE,
   CHASER_IMAGE,
+  CLAWBER_FULL_IMAGE,
+  CLAWBER_HALF_IMAGE,
+  CLAWBER_EMPTY_IMAGE,
   DNA_IMAGE,
   BACKGROUND_IMAGE,
   TOOTH_IMAGE,
-  NAIL_IMAGE
+  NAIL_IMAGE,
+  CLAWBER_CLAW_BIG_IMAGE,
+  CLAWBER_CLAW_SMALL_IMAGE
 } from "../consts/images";
 
 import {
@@ -45,6 +52,11 @@ import dna from "../assets/dna.png";
 import eyeball from "../assets/eyeball.png";
 import eyeballCluster from "../assets/eyeball-cluster.png";
 import chaser from "../assets/chaser.png";
+import clawberFull from "../assets/clawber-full.png";
+import clawberHalf from "../assets/clawber-half.png";
+import clawberEmpty from "../assets/clawber-empty.png";
+import clawberClawBig from "../assets/clawber-claw-big.png";
+import clawberClawSmall from "../assets/clawber-claw-small.png";
 
 // sounds
 import explode from "../assets/sounds/explode.mp3";
@@ -71,6 +83,11 @@ export default class MainGame extends Phaser.Scene {
     this.load.image(EYEBALL_IMAGE, eyeball);
     this.load.image(EYEBALL_CLUSTER_IMAGE, eyeballCluster);
     this.load.image(CHASER_IMAGE, chaser);
+    this.load.image(CLAWBER_FULL_IMAGE, clawberFull);
+    this.load.image(CLAWBER_HALF_IMAGE, clawberHalf);
+    this.load.image(CLAWBER_EMPTY_IMAGE, clawberEmpty);
+    this.load.image(CLAWBER_CLAW_BIG_IMAGE, clawberClawBig);
+    this.load.image(CLAWBER_CLAW_SMALL_IMAGE, clawberClawSmall);
 
     // audio
     this.load.audio(SPIT1_SOUND, spit1);
@@ -132,6 +149,10 @@ export default class MainGame extends Phaser.Scene {
       classType: Enemy
     });
 
+    this.enemyBulletGroup = this.physics.add.group({
+      classType: Ammo
+    });
+
     this.maxEnemies = 30;
 
     this.rnd = new Phaser.Math.RandomDataGenerator();
@@ -165,6 +186,12 @@ export default class MainGame extends Phaser.Scene {
       this.player,
       this.powerups,
       this.handlePlayerPowerupOverlap.bind(this)
+    );
+
+    this.physics.add.collider(
+      this.player,
+      this.enemyBulletGroup,
+      this.handleEnemyBulletPlayerCollider.bind(this)
     );
   }
 
@@ -201,7 +228,9 @@ export default class MainGame extends Phaser.Scene {
         this.spawnChaserSmall();
       } else if (dice > 0.85) {
         this.spawnChaserLarge();
-      } else if (dice > 0.6) {
+      } else if (dice > 0.75) {
+        this.spawnClawber();
+      } else if (dice > 0.45) {
         this.spawnEyeballCluster(spawnX, spawnY);
       } else {
         this.spawnBlorb(spawnX, spawnY);
@@ -250,6 +279,15 @@ export default class MainGame extends Phaser.Scene {
     this.enemiesGroup.add(chaser);
   }
 
+  spawnClawber() {
+    const spawnX =
+      this.player.x > this.background.width / 2 ? 0 : this.background.width;
+    const spawnY =
+      this.player.y > this.background.height / 2 ? 0 : this.background.height;
+    const clawber = new Clawber(this, spawnX, spawnY);
+    this.enemiesGroup.add(clawber);
+  }
+
   cleanupEnemies(currentEnemies) {
     currentEnemies.forEach(enemy => {
       const { x, y } = enemy.body;
@@ -282,6 +320,13 @@ export default class MainGame extends Phaser.Scene {
   handleBulletEnemyCollider(bullet, enemy) {
     if (enemy) {
       enemy.damage(bullet.damage);
+      bullet.destroy();
+    }
+  }
+
+  handleEnemyBulletPlayerCollider(player, bullet) {
+    if (player) {
+      player.health -= bullet.damage;
       bullet.destroy();
     }
   }
