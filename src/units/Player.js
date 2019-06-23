@@ -1,4 +1,9 @@
-import Tooth from "../weapons/Tooth";
+import ToothGun from "../weapons/ToothGun";
+import SpreadToothGun from "../weapons/SpreadToothGun";
+import NailGun from "../weapons/NailGun";
+import SpreadNailGun from "../weapons/SpreadNailGun";
+import ToothAndNailGun from "../weapons/ToothAndNailGun";
+import ToothNailEyeballGun from "../weapons/ToothNailEyeballGun";
 
 import Controller from "../utils/Controller";
 
@@ -10,34 +15,44 @@ import {
   PLAYER5_IMAGE
 } from "../consts/images";
 
-import { THUM2_SOUND } from "../consts/sounds";
-
-export default class Player {
+export default class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y) {
+    super(scene, x, y, PLAYER1_IMAGE);
+
     this.scene = scene;
+
+    // since we're not using a physics factory function to create
+    // these will let the scene know about this object
+    this.scene.add.existing(this);
+    this.scene.physics.add.existing(this);
 
     // create physics-based sprite
     // angle offset for slightly tilty sprite
     this.angleOffset = 18;
-    this.sprite = scene.physics.add
-      .sprite(x, y, PLAYER1_IMAGE, 0)
-      .setAngle(this.angleOffset)
-      .setCollideWorldBounds(true)
-      .setScale(0.25, 0.25)
-      .setDrag(300)
-      .setAngularDrag(400)
-      .setMaxVelocity(600);
+    // this.scene.physics.world.enable(this); // give access 2 physics
 
-    // create group for bullets
-    this.bulletGroup = this.scene.physics.add.group({
-      defaultKey: "bullets",
-      maxSize: 20
-    });
-    this.bullets = [];
-    this.bulletInterval = 0;
+    this.setAngle(this.angleOffset);
+    this.setCollideWorldBounds(true);
+    this.setScale(0.25, 0.25);
+    this.setDrag(300);
+    this.setAngularDrag(400);
+    this.setMaxVelocity(600);
+    this.setDepth(1);
+
+    // weapons
+    this.weapons = {
+      tooth: new ToothGun(this.scene),
+      spreadTooth: new SpreadToothGun(this.scene),
+      nail: new NailGun(this.scene),
+      spreadNail: new SpreadNailGun(this.scene),
+      toothAndNail: new ToothAndNailGun(this.scene),
+      toothNailEyeball: new ToothNailEyeballGun(this.scene)
+    };
+    this.currentWeapon = this.weapons.tooth;
 
     // healthbar
-    this.health = 100;
+    this._health = 350;
+    this.maxHealth = 5000;
     this.suffering = false;
 
     // controllers
@@ -45,157 +60,165 @@ export default class Player {
   }
 
   update(time, delta) {
-    const { controller, sprite } = this;
-    controller.update();
+    const { controller } = this;
+    controller.update(); // update to get the gamepad info
 
     // transformations based on health
-    if (this.sprite.texture.key !== PLAYER1_IMAGE && this.health < 150) {
-      this.sprite.setTexture(PLAYER1_IMAGE);
-      this.sprite.setScale(0.25, 0.25);
-    } else if (
-      this.sprite.texture.key !== PLAYER2_IMAGE &&
-      this.health >= 150 &&
-      this.health < 200
-    ) {
-      this.sprite.setTexture(PLAYER2_IMAGE);
-      this.sprite.setScale(0.27, 0.27);
-    } else if (
-      this.sprite.texture.key !== PLAYER3_IMAGE &&
-      this.health >= 200 &&
-      this.health < 250
-    ) {
-      this.sprite.setTexture(PLAYER3_IMAGE);
-      this.sprite.setScale(0.29, 0.29);
-    } else if (
-      this.sprite.texture.key !== PLAYER4_IMAGE &&
-      this.health >= 250 &&
-      this.health < 300
-    ) {
-      this.sprite.setTexture(PLAYER4_IMAGE);
-      this.sprite.setScale(0.31, 0.31);
-    } else if (
-      this.sprite.texture.key !== PLAYER5_IMAGE &&
-      this.health >= 300
-    ) {
-      this.sprite.setTexture(PLAYER5_IMAGE);
-      this.sprite.setScale(0.34, 0.34);
-    } else if (this.health >= 350) {
-      // Scales based on current health
-      const newScale = 0.35 + (this.health - 300) * 0.0005;
-      this.sprite.setScale(newScale, newScale);
-    }
+    this.updateTransform();
 
+    // movement
+    this.updateMovement();
+
+    // rotation & firing
+    this.updateRotation();
+  }
+
+  updateMovement() {
+    const { controller, body } = this;
     // vertical movement
     if (controller.moveUp) {
-      sprite.body.setAccelerationY(-300);
+      body.setAccelerationY(-300);
     } else if (controller.moveDown) {
-      sprite.body.setAccelerationY(300);
+      body.setAccelerationY(300);
     } else {
-      sprite.body.setAccelerationY(0);
+      body.setAccelerationY(0);
     }
 
     // horizontal movement
     if (controller.moveLeft) {
-      sprite.body.setAccelerationX(-300);
+      body.setAccelerationX(-300);
     } else if (controller.moveRight) {
-      sprite.body.setAccelerationX(300);
+      body.setAccelerationX(300);
     } else {
-      sprite.body.setAccelerationX(0);
+      body.setAccelerationX(0);
     }
+  }
 
-    // rotation & firing
+  updateRotation() {
+    const { controller, angleOffset } = this;
     if (controller.shootUp && controller.shootRight) {
-      sprite.setAngle(this.angleOffset + 225);
+      this.setAngle(angleOffset + 225);
       this.fire();
     } else if (controller.shootDown && controller.shootRight) {
-      sprite.setAngle(this.angleOffset + 315);
+      this.setAngle(angleOffset + 315);
       this.fire();
     } else if (controller.shootDown && controller.shootLeft) {
-      sprite.setAngle(this.angleOffset + 45);
+      this.setAngle(angleOffset + 45);
       this.fire();
     } else if (controller.shootUp && controller.shootLeft) {
-      sprite.setAngle(this.angleOffset + 135);
+      this.setAngle(angleOffset + 135);
       this.fire();
     } else if (controller.shootUp) {
-      sprite.setAngle(this.angleOffset + 180);
+      this.setAngle(angleOffset + 180);
       this.fire();
     } else if (controller.shootRight) {
-      sprite.setAngle(this.angleOffset + 270);
+      this.setAngle(angleOffset + 270);
       this.fire();
     } else if (controller.shootDown) {
-      sprite.setAngle(this.angleOffset);
+      this.setAngle(angleOffset);
       this.fire();
     } else if (controller.shootLeft) {
-      sprite.setAngle(this.angleOffset + 90);
+      this.setAngle(angleOffset + 90);
       this.fire();
     }
+  }
 
-    // update/cleanup bullets
-    this.bullets = this.bullets.filter(bullet => {
-      bullet.update(); // call update
-      return bullet.active; // filter out not active
-    });
+  updateTransform() {
+    if (this.texture.key !== PLAYER1_IMAGE && this.health < 150) {
+      this.setTexture(PLAYER1_IMAGE);
+      this.setScale(0.25, 0.25);
+      this.currentWeapon = this.weapons.tooth;
+    } else if (
+      this.texture.key !== PLAYER2_IMAGE &&
+      this.health >= 150 &&
+      this.health < 200
+    ) {
+      this.setTexture(PLAYER2_IMAGE);
+      this.setScale(0.27, 0.27);
+      this.currentWeapon = this.weapons.spreadTooth;
+    } else if (
+      this.texture.key !== PLAYER3_IMAGE &&
+      this.health >= 200 &&
+      this.health < 250
+    ) {
+      this.setTexture(PLAYER3_IMAGE);
+      this.setScale(0.29, 0.29);
+      this.currentWeapon = this.weapons.nail;
+    } else if (
+      this.texture.key !== PLAYER4_IMAGE &&
+      this.health >= 250 &&
+      this.health < 300
+    ) {
+      this.setTexture(PLAYER4_IMAGE);
+      this.setScale(0.31, 0.31);
+      this.currentWeapon = this.weapons.spreadNail;
+    } else if (this.texture.key !== PLAYER5_IMAGE && this.health >= 300) {
+      this.setTexture(PLAYER5_IMAGE);
+      this.setScale(0.34, 0.34);
+      this.currentWeapon = this.weapons.toothAndNail;
+    } else if (this.health >= 350) {
+      // Scales based on current health
+      const newScale = 0.35 + (this.health - 300) * 0.0005;
+      this.setScale(newScale, newScale);
+      this.currentWeapon = this.weapons.toothNailEyeball;
+    }
   }
 
   fire() {
-    // only allow fire at interval
-    this.bulletInterval--;
-    if (this.bulletInterval <= 0) {
-      this.bulletInterval = 20;
-      const bullet = new Tooth({
-        group: this.bulletGroup,
-        scene: this.scene,
-        x: this.sprite.x,
-        y: this.sprite.y,
-        angle: this.sprite.body.rotation + 70
-      });
-      this.scene.sound.play(THUM2_SOUND, {
-        seek: 0.15
-      });
-      this.bullets.push(bullet);
-      bullet.sprite.scale = this.sprite.scale;
-    }
+    // dynamically get weapon
+    this.bulletInterval = this.currentWeapon.interval;
+    this.currentWeapon.fire(
+      this.x,
+      this.y,
+      this.body.rotation + 70,
+      this.scale
+    );
   }
 
   kill() {
     //this gets called when the sprite has no more health
     this.alive = false;
-    this.sprite.visible = false;
+    this.visible = false;
     // not sure what else we want to do when a game ends
   }
 
-  heal(amount) {
-    // this gets called when the sprite completes some action
-    // picks up DNA? kills an enemy? or never?
-    // and his health increases
-    if (this.health > 0) {
-      this.health += amount;
-      if (this.health > this.maxHealth) {
-        this.health = this.maxHealth;
-      }
-      return this.health;
-    }
+  // getter and setter for health
+  // use this.health =
+  get health() {
+    return this._health;
   }
 
-  damage(amount) {
-    // this gets called when the sprite doesn't avoid an enemy
-    // and his health declines
-    // if his health reaches 0, he should die
-    if (this.health > 0 && this.suffering === false) {
+  set health(amount) {
+    const prevHealth = this._health;
+    // can't take additional damage while suffering
+    if (prevHealth > amount && !this.suffering) {
       this.suffer();
-      this.health -= amount;
-      // if (this.health <= 0) this.kill();
+      this._health = amount;
+    } else if (prevHealth < amount) {
+      this._health = amount;
     }
-    return this.health;
+
+    if (this._health > 0) {
+      // cap max health
+      if (this._health > this.maxHealth) {
+        this._health = this.maxHealth;
+      }
+    } else {
+      this._health = 0;
+      this.kill();
+    }
+
+    this.scene.healthbar.setText(`Health: ${this._health}`);
+    return this._health;
   }
 
   suffer() {
     this.suffering = true;
     // debugger;
-    this.sprite.setTintFill(0xffffff);
+    this.setTint(0xff0000);
     setTimeout(() => {
-      this.sprite.clearTint();
+      this.clearTint();
       this.suffering = false;
-    }, 200);
+    }, 1000);
   }
 }

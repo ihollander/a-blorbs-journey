@@ -34,20 +34,21 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
   killMe() {
     // debugger;
     this.scene.sound.play(EXPLODE_SOUND, {
-      seek: 0.35
+      seek: 1.25
     });
     const chance = Math.random();
-    if (chance < 1) {
+    if (chance < 0.9) {
       this.scene.powerups
         .create(this.body.x, this.body.y, DNA_IMAGE)
-        .setScale(0.2);
+        .setScale(0.2, 0.2)
+        .refreshBody(); // must call after setScale to resize
     }
     this.destroy();
   }
 
   update() {
-    const playerx = this.scene.player.sprite.x;
-    const playery = this.scene.player.sprite.y;
+    const playerx = this.scene.player.x;
+    const playery = this.scene.player.y;
     const thisx = this.body.x;
     const thisy = this.body.y;
   }
