@@ -10,6 +10,12 @@ export default class Chaser extends Enemy {
   }
 
   update() {
-    debugger;
+    const angle = Phaser.Math.Angle.Between(
+      this.x,
+      this.y,
+      this.scene.player.sprite.x,
+      this.scene.player.sprite.y
+    );
+    this.setAngle((angle * 180) / Math.PI);
   }
 }

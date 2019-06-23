@@ -6,6 +6,7 @@ import Blorb from "../units/Blorb";
 
 import EyeballCluster from "../units/EyeballCluster";
 import Eyeball from "../units/Eyeball";
+import Chaser from "../units/Chaser";
 
 import {
   PLAYER1_IMAGE,
