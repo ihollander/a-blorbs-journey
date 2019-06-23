@@ -1,5 +1,7 @@
-import Tooth from "../weapons/Tooth";
-import Nail from "../weapons/Nail";
+import ToothGun from "../weapons/ToothGun";
+import NailGun from "../weapons/NailGun";
+import SpreadNailGun from "../weapons/SpreadNailGun";
+import ToothAndNailGun from "../weapons/ToothAndNailGun";
 
 import Controller from "../utils/Controller";
 
@@ -33,23 +35,19 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.setDrag(300);
     this.setAngularDrag(400);
     this.setMaxVelocity(600);
+    this.setDepth(1);
 
     // weapons
     this.weapons = {
-      tooth: {
-        constructor: Tooth,
-        bulletInterval: 20
-      },
-      nail: {
-        constructor: Nail,
-        bulletInterval: 10
-      }
+      tooth: new ToothGun(this.scene),
+      nail: new NailGun(this.scene),
+      spreadNail: new SpreadNailGun(this.scene),
+      toothAndNail: new ToothAndNailGun(this.scene)
     };
-    this.bulletInterval = 0;
-    this.currentWeapon = "tooth";
+    this.currentWeapon = this.weapons.tooth;
 
     // healthbar
-    this._health = 100;
+    this._health = 250;
     this.maxHealth = 500;
     this.suffering = false;
 
@@ -125,7 +123,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     if (this.texture.key !== PLAYER1_IMAGE && this.health < 150) {
       this.setTexture(PLAYER1_IMAGE);
       this.setScale(0.25, 0.25);
-      this.currentWeapon = "tooth";
+      this.currentWeapon = this.weapons.tooth;
     } else if (
       this.texture.key !== PLAYER2_IMAGE &&
       this.health >= 150 &&
@@ -133,7 +131,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     ) {
       this.setTexture(PLAYER2_IMAGE);
       this.setScale(0.27, 0.27);
-      this.currentWeapon = "nail";
+      this.currentWeapon = this.weapons.nail;
     } else if (
       this.texture.key !== PLAYER3_IMAGE &&
       this.health >= 200 &&
@@ -141,6 +139,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     ) {
       this.setTexture(PLAYER3_IMAGE);
       this.setScale(0.29, 0.29);
+      this.currentWeapon = this.weapons.spreadNail;
     } else if (
       this.texture.key !== PLAYER4_IMAGE &&
       this.health >= 250 &&
@@ -148,6 +147,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     ) {
       this.setTexture(PLAYER4_IMAGE);
       this.setScale(0.31, 0.31);
+      this.currentWeapon = this.weapons.toothAndNail;
     } else if (this.texture.key !== PLAYER5_IMAGE && this.health >= 300) {
       this.setTexture(PLAYER5_IMAGE);
       this.setScale(0.34, 0.34);
@@ -159,25 +159,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   fire() {
-    // only allow fire at interval
-    this.bulletInterval--;
-    if (this.bulletInterval <= 0) {
-      // dynamically get weapon
-      const weapon = this.weapons[this.currentWeapon];
-      this.bulletInterval = weapon.bulletInterval;
-      // this is a weird workaround for dynamically calling constructor fn
-      // probs should refactor
-      const bullet = weapon.constructor.call(
-        Object.create(weapon.constructor.prototype),
-        this.scene,
-        this.x,
-        this.y
-      );
-      this.scene.bulletGroup.add(bullet);
-      // can't set physics on the bullet until it's been added to the group
-      // moved physics logic to init function
-      bullet.init(this.body.rotation + 70, this.scale);
-    }
+    // dynamically get weapon
+    this.bulletInterval = this.currentWeapon.interval;
+    this.currentWeapon.fire(
+      this.x,
+      this.y,
+      this.body.rotation + 70,
+      this.scale
+    );
   }
 
   kill() {
