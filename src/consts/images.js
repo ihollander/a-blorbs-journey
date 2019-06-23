@@ -1,5 +1,6 @@
 // weapons
 export const TOOTH_IMAGE = "TOOTH_IMAGE";
+export const NAIL_IMAGE = "NAIL_IMAGE";
 
 // units
 export const PLAYER1_IMAGE = "PLAYER1_IMAGE";
