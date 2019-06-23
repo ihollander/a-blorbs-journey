@@ -194,28 +194,36 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   set health(amount) {
-    if (this._health > 0) {
+    const prevHealth = this._health;
+    // can't take additional damage while suffering
+    if (prevHealth > amount && !this.suffering) {
+      this.suffer();
       this._health = amount;
-      if (amount < 0 && this.suffering === false) {
-        this.suffer();
-      }
+    } else if (prevHealth < amount) {
+      this._health = amount;
+    }
+
+    if (this._health > 0) {
+      // cap max health
       if (this._health > this.maxHealth) {
         this._health = this.maxHealth;
       }
-      this.scene.healthbar.setText(`Health: ${this.health}`);
     } else {
+      this._health = 0;
       this.kill();
     }
+
+    this.scene.healthbar.setText(`Health: ${this._health}`);
     return this._health;
   }
 
   suffer() {
     this.suffering = true;
     // debugger;
-    this.setTintFill(0xffffff);
+    this.setTint(0xff0000);
     setTimeout(() => {
       this.clearTint();
       this.suffering = false;
-    }, 200);
+    }, 1000);
   }
 }

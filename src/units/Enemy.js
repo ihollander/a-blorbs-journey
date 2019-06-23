@@ -34,7 +34,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
   killMe() {
     // debugger;
     this.scene.sound.play(EXPLODE_SOUND, {
-      seek: 0.35
+      seek: 1.25
     });
     const chance = Math.random();
     if (chance < 0.9) {
