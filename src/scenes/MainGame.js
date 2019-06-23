@@ -260,11 +260,11 @@ export default class MainGame extends Phaser.Scene {
         Phaser.Math.Between(playerBounds.bottom + 200, this.background.height)
       ]);
       const dice = Math.random();
-      if (dice > 0.95) {
+      if (dice > 0.95 && this.player.health >= 150) {
         this.spawnChaserSmall();
-      } else if (dice > 0.85) {
+      } else if (dice > 0.85 && this.player.health >= 250) {
         this.spawnChaserLarge();
-      } else if (dice > 0.75) {
+      } else if (dice > 0.75 && this.player.health >= 200) {
         this.spawnClawber();
       } else if (dice > 0.45) {
         this.spawnEyeballCluster(spawnX, spawnY);
