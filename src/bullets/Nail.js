@@ -14,7 +14,7 @@ export default class Nail extends Ammo {
     this.speed = 800;
 
     // default damage
-    this.damage = 0.5;
+    this.damage = 1.5;
   }
 
   init(angle, scale) {

@@ -49,7 +49,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.currentWeapon = this.weapons.tooth;
 
     // healthbar
-    this._health = 50;
+    this._health = 200;
     this.maxHealth = 5000;
     this.suffering = false;
   }
