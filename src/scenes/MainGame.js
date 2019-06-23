@@ -217,7 +217,7 @@ export default class MainGame extends Phaser.Scene {
   handlePlayerEnemyCollider(player, enemy) {
     if (enemy) {
       enemy.damage(1);
-      this.player.damage(10);
+      this.player.damage(50);
       // TODO: This damage should depend on the type of enemy
     }
   }
