@@ -83,11 +83,11 @@ export default class MainGame extends Phaser.Scene {
     // });
     // this.healthbar.setScrollFactor(0, 0);
 
-    const testbar = new Phaser.Geom.Rectangle(25, 25, 300, 40);
-    let graphics = this.add.graphics({ fillStyle: { color: 0x0000ff } });
-    graphics.fillRectShape(testbar);
+    // const testbar = new Phaser.Geom.Rectangle(25, 25, 300, 40);
+    // let graphics = this.add.graphics({ fillStyle: { color: 0x0000ff } });
+    // graphics.fillRectShape(testbar);
 
-    graphics.setScrollFactor(0, 0);
+    // graphics.setScrollFactor(0, 0);
     // this.healthbar.setScrollFactor(0, 0);
 
     // powerups temp
