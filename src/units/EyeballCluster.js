@@ -35,6 +35,6 @@ export default class EyeballCluster extends Enemy {
   }
 
   update() {
-    this.spin === "l" ? (this.angle += 0.5) : (this.angle -= 0.5);
+    this.spin === "l" ? (this.angle += 0.1) : (this.angle -= 0.1);
   }
 }
