@@ -153,23 +153,20 @@ export default class MainGame extends Phaser.Scene {
   // Choose which enemies to spawn and spawn them
   spawnEnemies(currentEnemies) {
     if (currentEnemies.length <= this.maxEnemies) {
+      let spawnX = Phaser.Math.Between(10, this.background.width);
+      let spawnY = Phaser.Math.Between(10, this.background.height);
+
       if (Math.random() > 0.5) {
-        this.spawnBlorb();
+        this.spawnBlorb(spawnX, spawnY);
       } else {
-        this.spawnEyeballCluster();
+        this.spawnEyeballCluster(spawnX, spawnY);
       }
     }
   }
 
   // Spawn a blorb
-  spawnBlorb() {
-    this.enemiesGroup.add(
-      new Blorb(
-        this,
-        Phaser.Math.Between(10, this.background.width),
-        Phaser.Math.Between(10, this.background.height)
-      )
-    );
+  spawnBlorb(x, y) {
+    this.enemiesGroup.add(new Blorb(this, x, y));
   }
 
   spawnEyeballCluster() {
