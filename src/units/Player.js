@@ -178,8 +178,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   kill() {
     //this gets called when the sprite has no more health
     // debugger;
+    this.scene.cameras.main.shake(500, 0.025);
     this.scene.gameOver = true;
-    this.scene.gameOverCard.setPosition(this.x, this.y).setVisible(true);
+    this.scene.gameOverCard
+      .setPosition(
+        this.scene.cameras.main.worldView.centerX,
+        this.scene.cameras.main.worldView.centerY
+      )
+      .setVisible(true);
     this.destroy();
   }
 
