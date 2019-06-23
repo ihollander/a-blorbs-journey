@@ -210,10 +210,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       if (this._health > this.maxHealth) {
         this._health = this.maxHealth;
       }
-      this.scene.healthbar.setText(`Health: ${this._health}`);
     } else {
       this._health = 0;
-      this.scene.healthbar.setText(`Health: ${this._health}`);
       this.kill();
     }
 
