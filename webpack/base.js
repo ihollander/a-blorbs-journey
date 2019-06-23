@@ -26,7 +26,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin(["dist"], {
+    new CleanWebpackPlugin(["docs"], {
       root: path.resolve(__dirname, "../")
     }),
     new webpack.DefinePlugin({
