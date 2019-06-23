@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import StartScreen from "./scenes/StartScreen";
 import MainGame from "./scenes/MainGame";
 
 const config = {
@@ -15,7 +16,7 @@ const config = {
   input: {
     gamepad: true
   },
-  scene: [MainGame]
+  scene: [StartScreen, MainGame]
 };
 
 const game = new Phaser.Game(config);
