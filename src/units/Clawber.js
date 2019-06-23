@@ -58,7 +58,7 @@ export default class Chaser extends Enemy {
         -100,
         this.body.velocity
       );
-    } else if (distance > 500 && this.claws > 0) {
+    } else if (distance > 450 && this.claws > 0) {
       this.fire();
     } else {
       this.scene.physics.velocityFromRotation(
