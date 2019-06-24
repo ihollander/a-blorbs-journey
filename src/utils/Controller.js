@@ -70,8 +70,8 @@ export default class Controller {
     return (
       this.cursors.up.isDown ||
       (this.pad &&
-        this.pad.axes[4].value < -this.pad.axes[4].threshold &&
-        this.pad.axes[4].value < -0.5)
+        this.pad.axes[3].value < -this.pad.axes[3].threshold &&
+        this.pad.axes[3].value < -0.5)
     );
   }
 
@@ -79,8 +79,8 @@ export default class Controller {
     return (
       this.cursors.down.isDown ||
       (this.pad &&
-        this.pad.axes[4].value > this.pad.axes[4].threshold &&
-        this.pad.axes[4].value > 0.5)
+        this.pad.axes[3].value > this.pad.axes[3].threshold &&
+        this.pad.axes[3].value > 0.5)
     );
   }
 
@@ -88,8 +88,8 @@ export default class Controller {
     return (
       this.cursors.right.isDown ||
       (this.pad &&
-        this.pad.axes[3].value > this.pad.axes[3].threshold &&
-        this.pad.axes[3].value > 0.5)
+        this.pad.axes[2].value > this.pad.axes[2].threshold &&
+        this.pad.axes[2].value > 0.5)
     );
   }
 
@@ -97,8 +97,8 @@ export default class Controller {
     return (
       this.cursors.left.isDown ||
       (this.pad &&
-        this.pad.axes[3].value < -this.pad.axes[3].threshold &&
-        this.pad.axes[3].value < -0.5)
+        this.pad.axes[2].value < -this.pad.axes[2].threshold &&
+        this.pad.axes[2].value < -0.5)
     );
   }
 }
