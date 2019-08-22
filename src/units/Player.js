@@ -184,7 +184,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   kill() {
     //this gets called when the sprite has no more health
-    // debugger;
     this.scene.cameras.main.shake(500, 0.025);
     this.scene.gameOver = true;
     this.scene.gameOverCard
@@ -203,6 +202,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       )
       .setVisible(true);
     this.destroy();
+  }
+
+  powerup() {
+    this.health += 10;
+  }
+
+  damage(amount) {
+    this.health -= amount
   }
 
   // getter and setter for health

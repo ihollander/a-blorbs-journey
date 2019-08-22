@@ -15,6 +15,7 @@ export default class EyeballCluster extends Enemy {
     this.health = 30;
 
     this.collisionDamage = 50;
+    this.setInitialVelocity(50);
   }
 
   damage(x) {
