@@ -10,31 +10,11 @@ export default class EyeballCluster extends Enemy {
     this.body.maxVelocity.x = 50;
     this.body.maxVelocity.y = 50;
 
-    Math.random > 0.5 ? (this.spin = "l") : (this.spin = "r");
+    this.spin = Math.random > 0.5 ? "l" : "r";
 
     this.health = 30;
 
     this.collisionDamage = 50;
-    this.setInitialVelocity(50);
-  }
-
-  damage(x) {
-    if (this.suffering === false) {
-      this.health -= x;
-
-      if (this.health <= 0) {
-        // Spawn a random number of eyeballs
-        this.scene.spawnEyeballs(
-          Math.floor(Math.random() * 5) + 2,
-          this.x,
-          this.y
-        );
-        // And then destroy
-        this.destroy();
-      } else {
-        this.suffer();
-      }
-    }
   }
 
   update() {

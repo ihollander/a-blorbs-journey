@@ -151,7 +151,7 @@ export default class MainGame extends Phaser.Scene {
 
     this.time.addEvent({
       delay: 700,
-      callback: function() {
+      callback: function () {
         this.danceBlorbs(this.currentEnemies());
         this.spawnEnemies(this.currentEnemies());
         this.cleanupEnemies(this.currentEnemies());
@@ -215,27 +215,19 @@ export default class MainGame extends Phaser.Scene {
   danceBlorbs(currentEnemies) {
     currentEnemies
       .filter(enemy => enemy.constructor.name === "Blorb")
-      .forEach(function(blorb) {
-        blorb.dance();
-      });
+      .forEach(blorb => blorb.dance());
   }
 
   getSpawnPosition() {
-    let spawnX, spawnY;
-    if (this.player.highScore >= 170) {
-      spawnX = this.player.x > this.background.width / 2 ? 0 : this.background.width;
-      spawnY = this.player.y > this.background.height / 2 ? 0 : this.background.height;
-    } else {
-      const playerBounds = this.player.getBounds();
-      spawnX = this.rnd.pick([
-        Phaser.Math.Between(10, playerBounds.left - 200),
-        Phaser.Math.Between(playerBounds.right + 200, this.background.width)
-      ]);
-      spawnY = this.rnd.pick([
-        Phaser.Math.Between(10, playerBounds.top - 200),
-        Phaser.Math.Between(playerBounds.bottom + 200, this.background.height)
-      ]);
-    }
+    const playerBounds = this.player.getBounds();
+    const spawnX = this.rnd.pick([
+      Phaser.Math.Between(10, playerBounds.left - 200),
+      Phaser.Math.Between(playerBounds.right + 200, this.background.width)
+    ]);
+    const spawnY = this.rnd.pick([
+      Phaser.Math.Between(10, playerBounds.top - 200),
+      Phaser.Math.Between(playerBounds.bottom + 200, this.background.height)
+    ]);
     return [spawnX, spawnY]
   }
 
@@ -264,26 +256,29 @@ export default class MainGame extends Phaser.Scene {
   }
 
   spawnEyeballCluster(x, y) {
-    this.enemiesGroup.add(new EyeballCluster(this, x, y));
-    
+    const cluster = new EyeballCluster(this, x, y)
+    this.enemiesGroup.add(cluster);
+    cluster.setInitialVelocity(50);
   }
 
-  spawnEyeballs(spawnNum, x, y) {
+  spawnEyeballs(x, y, spawnNum) {
     for (let i = 0; i < spawnNum; i++) {
-      this.enemiesGroup.add(new Eyeball(this, x, y));
+      const eyeball = new Eyeball(this, x, y);
+      this.enemiesGroup.add(eyeball);
+      eyeball.setInitialVelocity(400);
     }
   }
 
-  spawnChaserSmall() {
-    this.enemiesGroup.add(new ChaserSmall(this, spawnX, spawnY));
+  spawnChaserSmall(x, y) {
+    this.enemiesGroup.add(new ChaserSmall(this, x, y));
   }
 
-  spawnChaserLarge() {
-    this.enemiesGroup.add(new ChaserLarge(this, spawnX, spawnY));
+  spawnChaserLarge(x, y) {
+    this.enemiesGroup.add(new ChaserLarge(this, x, y));
   }
 
-  spawnClawber() {
-    this.enemiesGroup.add(new Clawber(this, spawnX, spawnY));
+  spawnClawber(x, y) {
+    this.enemiesGroup.add(new Clawber(this, x, y));
   }
 
   cleanupEnemies(currentEnemies) {
@@ -309,12 +304,31 @@ export default class MainGame extends Phaser.Scene {
   }
 
   handlePlayerEnemyCollider(player, enemy) {
-    // enemy.damage(1);
     player.damage(enemy.collisionDamage);
   }
 
   handleBulletEnemyOverlap(bullet, enemy) {
-    enemy.damage(bullet.damage);
+    enemy.damage(bullet.damage, () => {
+      this.killCount += 1;
+      this.sound.play(sound.EXPLODE_SOUND, {
+        seek: 1.25
+      });
+
+      if (enemy.constructor.name === "EyeballCluster") {
+        this.spawnEyeballs(
+          enemy.x,
+          enemy.y,
+          Math.floor(Math.random() * 5) + 2
+        );
+      }
+
+      if (Math.random() < 0.9) {
+        this.powerups
+          .create(enemy.x, enemy.y, img.DNA_IMAGE)
+          .setScale(0.2, 0.2)
+          .refreshBody();
+      }
+    });
     bullet.destroy();
   }
 

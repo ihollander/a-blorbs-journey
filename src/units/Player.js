@@ -56,9 +56,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.highScore = this._health;
   }
 
-  update(time, delta) {
-    const { controller } = this.scene;
-
+  update() {
     // transformations based on health
     this.updateTransform();
 

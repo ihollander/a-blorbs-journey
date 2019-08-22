@@ -10,7 +10,7 @@ export default class Chaser extends Enemy {
   constructor(scene, x, y) {
     super(scene, x, y, CLAWBER_FULL_IMAGE, "Chaser");
 
-    this.weapon = new ClawberShot(this.scene);
+    this.weapon = new ClawberShot(scene);
 
     this.setScale(0.4, 0.4);
 
@@ -74,7 +74,7 @@ export default class Chaser extends Enemy {
     this.claws === 1
       ? this.setTexture(CLAWBER_HALF_IMAGE)
       : this.setTexture(CLAWBER_EMPTY_IMAGE);
-    const isLarge = this.claws > 0 ? false : true;
+    const isLarge = this.claws > 0;
     this.weapon.fire(this.x, this.y, this.body.rotation + 70, isLarge);
   }
 }
