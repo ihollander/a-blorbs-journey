@@ -135,6 +135,16 @@ export default class MainGame extends Phaser.Scene {
       .setDepth(1000)
       .setVisible(false);
 
+    this.healthText = this.add
+      .text(20, 20, "Score: 0", {
+        font: "50px Times New Roman",
+        fill: "#ffffff",
+        stroke: '#000',
+        strokeThickness: 10,
+      })
+      .setDepth(1000)
+      .setScrollFactor(0)
+
     this.gameOver = false;
 
     // enemies
@@ -200,6 +210,7 @@ export default class MainGame extends Phaser.Scene {
       this.player.update();
       this.currentEnemies().forEach(enemy => enemy.update());
       this.currentBullets().forEach(bullet => bullet.update());
+      this.healthText.setText(`Score: ${this.player.health}`)
     } else if (this.controller.extras.x.isDown) {
       this.scene.restart();
     }
