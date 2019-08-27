@@ -21,12 +21,16 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.collisionDamage = 10;
   }
 
-  damage(x) {
+  damage(x, onEnemyDestroyed) {
     if (this.suffering === false) {
       this.health -= x;
 
       if (this.health <= 0) {
-        this.killMe();
+        onEnemyDestroyed();
+        if (this.sound) {
+          this.sound.stop();
+        }
+        this.destroy();
       } else {
         this.suffer();
       }
@@ -52,7 +56,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite {
     this.destroy();
   }
 
-  update() {}
+  update() { }
 
   setInitialVelocity(x) {
     this.body.velocity.x = Phaser.Math.Between(-x, x);

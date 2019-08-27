@@ -2,7 +2,7 @@ import { EYEBALL_IMAGE } from "../consts/images";
 
 import Enemy from "./Enemy";
 
-export default class EyeballCluster extends Enemy {
+export default class Eyeball extends Enemy {
   constructor(scene, x, y) {
     super(scene, x, y, EYEBALL_IMAGE, "Eyeball");
 

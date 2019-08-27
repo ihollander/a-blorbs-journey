@@ -2,7 +2,7 @@ import { TITLESCREEN_IMAGE } from "../consts/images";
 
 import Controller from "../utils/Controller";
 
-import titleScreen from "../assets/title-screen.jpg";
+import titleScreen from "../assets/title-screen-instructions.png";
 
 export default class StartScreen extends Phaser.Scene {
   constructor() {
