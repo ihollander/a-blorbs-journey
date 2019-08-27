@@ -214,7 +214,7 @@ export default class MainGame extends Phaser.Scene {
   // Set all blorbs to random vector
   danceBlorbs(currentEnemies) {
     currentEnemies
-      .filter(enemy => enemy.constructor.name === "Blorb")
+      .filter(enemy => enemy instanceof Blorb)
       .forEach(blorb => blorb.dance());
   }
 
@@ -314,7 +314,7 @@ export default class MainGame extends Phaser.Scene {
         seek: 1.25
       });
 
-      if (enemy.constructor.name === "EyeballCluster") {
+      if (enemy instanceof EyeballCluster) {
         this.spawnEyeballs(
           enemy.x,
           enemy.y,
