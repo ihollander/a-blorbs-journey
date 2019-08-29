@@ -211,7 +211,7 @@ export default class MainGame extends Phaser.Scene {
       this.currentEnemies().forEach(enemy => enemy.update());
       this.currentBullets().forEach(bullet => bullet.update());
       this.healthText.setText(`Score: ${this.player.health}`)
-    } else if (this.controller.extras.x.isDown) {
+    } else if (this.controller.x) {
       this.scene.restart();
     }
 
@@ -312,10 +312,12 @@ export default class MainGame extends Phaser.Scene {
     });
     player.powerup();
     powerup.destroy();
+    this.controller.rumble(0.1, 250);
   }
 
   handlePlayerEnemyCollider(player, enemy) {
     player.damage(enemy.collisionDamage);
+    this.controller.rumble(0.5, 500);
   }
 
   handleBulletEnemyOverlap(bullet, enemy) {

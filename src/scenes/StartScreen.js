@@ -26,7 +26,8 @@ export default class StartScreen extends Phaser.Scene {
   }
 
   update() {
-    if (this.controller.extras.x.isDown) {
+    this.controller.update()
+    if (this.controller.x) {
       this.scene.stop("StartScreen");
       this.scene.start("MainGame");
     }

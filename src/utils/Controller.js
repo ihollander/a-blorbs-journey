@@ -30,6 +30,21 @@ export default class Controller {
     }
   }
 
+  rumble(value, duration) {
+    if (this.pad) {
+      this.pad.vibration.playEffect("dual-rumble", {
+          startDelay: 0,
+          duration: duration,
+          weakMagnitude: 0.1,
+          strongMagnitude: value
+      });
+    }
+  }
+
+  get x() {
+    return (this.extras.x.isDown || this.pad && this.pad.buttons[2].pressed)
+  }
+
   get moveUp() {
     return (
       this.wasds.up.isDown ||
@@ -62,7 +77,7 @@ export default class Controller {
       this.wasds.right.isDown ||
       (this.pad &&
         this.pad.axes[0].value > this.pad.axes[0].threshold &&
-        this.pad.axes[0].value > -0.5)
+        this.pad.axes[0].value > 0.5)
     );
   }
 
