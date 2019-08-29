@@ -347,6 +347,7 @@ export default class MainGame extends Phaser.Scene {
 
   handleEnemyBulletPlayerCollider(player, bullet) {
     player.damage(bullet.damage);
+    this.controller.rumble(0.25, 250);
     bullet.destroy();
   }
 

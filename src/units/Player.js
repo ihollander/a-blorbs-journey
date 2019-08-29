@@ -199,6 +199,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         `High Score: ${this.highScore}\nKill Count: ${this.scene.killCount}`
       )
       .setVisible(true);
+    this.scene.controller.rumble(0.75, 500);
     this.destroy();
   }
 
